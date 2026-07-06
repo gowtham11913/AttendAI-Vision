@@ -1,0 +1,406 @@
+{% extends "base.html" %}
+
+{% block title %}
+Analytics | AttendAI Vision
+{% endblock %}
+
+{% block content %}
+
+<section class="registration-header">
+
+    <div>
+        <span class="eyebrow">
+            ATTENDANCE INTELLIGENCE
+        </span>
+
+        <h2>
+            Analytics Dashboard
+        </h2>
+
+        <p>
+            Explore attendance trends, participation activity,
+            and student-wise attendance insights.
+        </p>
+    </div>
+
+    <div class="registration-status">
+        <span class="status-dot"></span>
+        Live Data
+    </div>
+
+</section>
+
+
+<section class="attendance-summary-grid">
+
+    <article class="panel attendance-summary-card">
+
+        <span class="eyebrow">
+            TOTAL RECORDS
+        </span>
+
+        <strong>
+            {{ total_records }}
+        </strong>
+
+        <p>
+            Verified attendance entries
+        </p>
+
+    </article>
+
+
+    <article class="panel attendance-summary-card">
+
+        <span class="eyebrow">
+            PRESENT TODAY
+        </span>
+
+        <strong>
+            {{ present_today }}
+        </strong>
+
+        <p>
+            Unique students present today
+        </p>
+
+    </article>
+
+
+    <article class="panel attendance-summary-card">
+
+        <span class="eyebrow">
+            UNIQUE STUDENTS
+        </span>
+
+        <strong>
+            {{ unique_students }}
+        </strong>
+
+        <p>
+            Students represented in attendance
+        </p>
+
+    </article>
+
+
+    <article class="panel attendance-summary-card">
+
+        <span class="eyebrow">
+            ACTIVE DAYS
+        </span>
+
+        <strong>
+            {{ active_days }}
+        </strong>
+
+        <p>
+            Dates containing attendance activity
+        </p>
+
+    </article>
+
+</section>
+
+
+<section class="analytics-grid">
+
+    <article class="panel analytics-trend-panel">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="eyebrow">
+                    DATE-WISE TREND
+                </span>
+
+                <h3>
+                    Daily Attendance
+                </h3>
+            </div>
+
+            <span class="live-badge">
+                <span class="status-dot"></span>
+                Last 14 Active Days
+            </span>
+
+        </div>
+
+
+        {% if daily_labels %}
+
+        <div class="analytics-chart-container">
+
+            <canvas
+                id="daily-attendance-chart"
+                aria-label="Daily attendance trend chart"
+            ></canvas>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-visual">
+                <span></span>
+            </div>
+
+            <strong>
+                No trend data available
+            </strong>
+
+            <p>
+                Daily attendance trends will appear after
+                verified attendance records are created.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </article>
+
+
+    <article class="panel analytics-insight-panel">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="eyebrow">
+                    DATA SUMMARY
+                </span>
+
+                <h3>
+                    Attendance Insights
+                </h3>
+            </div>
+
+        </div>
+
+
+        <div class="health-list">
+
+            <div class="health-row">
+
+                <div>
+                    <strong>
+                        Recorded Students
+                    </strong>
+
+                    <span>
+                        Unique verified identities
+                    </span>
+                </div>
+
+                <span class="health-status ready">
+                    {{ unique_students }}
+                </span>
+
+            </div>
+
+
+            <div class="health-row">
+
+                <div>
+                    <strong>
+                        Active Attendance Days
+                    </strong>
+
+                    <span>
+                        Dates with verified records
+                    </span>
+                </div>
+
+                <span class="health-status ready">
+                    {{ active_days }}
+                </span>
+
+            </div>
+
+
+            <div class="health-row">
+
+                <div>
+                    <strong>
+                        Today's Presence
+                    </strong>
+
+                    <span>
+                        Unique students today
+                    </span>
+                </div>
+
+                <span class="health-status ready">
+                    {{ present_today }}
+                </span>
+
+            </div>
+
+
+            <div class="health-row">
+
+                <div>
+                    <strong>
+                        Total Verifications
+                    </strong>
+
+                    <span>
+                        Stored attendance records
+                    </span>
+                </div>
+
+                <span class="health-status ready">
+                    {{ total_records }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </article>
+
+</section>
+
+
+<section class="panel analytics-student-panel">
+
+    <div class="panel-header">
+
+        <div>
+            <span class="eyebrow">
+                STUDENT PERFORMANCE
+            </span>
+
+            <h3>
+                Attendance by Student
+            </h3>
+        </div>
+
+        <a
+            href="/attendance"
+            class="text-button"
+        >
+            View Records
+        </a>
+
+    </div>
+
+
+    {% if student_attendance %}
+
+    <div class="attendance-table-wrapper">
+
+        <table class="attendance-table">
+
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Roll Number</th>
+                    <th>Attendance Days</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for student in student_attendance %}
+
+                <tr>
+
+                    <td>
+
+                        <div class="attendance-student-profile">
+
+                            <div class="attendance-student-avatar">
+                                {{ student.name[0] | upper }}
+                            </div>
+
+                            <div>
+                                <strong>
+                                    {{ student.name }}
+                                </strong>
+
+                                <span>
+                                    Verified identity
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <strong class="attendance-roll-number">
+                            {{ student.roll_no }}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ student.attendance_days }}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="attendance-present-badge">
+                            <span class="status-dot"></span>
+                            Active
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-visual">
+            <span></span>
+        </div>
+
+        <strong>
+            No student analytics available
+        </strong>
+
+        <p>
+            Student attendance insights will appear after
+            verified attendance records are created.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+{% if daily_labels %}
+
+<script type="application/json" id="analytics-chart-data">
+{
+    "labels": {{ daily_labels | tojson }},
+    "counts": {{ daily_counts | tojson }}
+}
+</script>
+
+{% endif %}
+
+{% endblock %}

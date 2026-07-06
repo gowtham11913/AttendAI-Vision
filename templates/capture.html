@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block title %}
+Face Capture | AttendAI Vision
+{% endblock %}
+
+{% block content %}
+
+<section class="registration-header">
+
+    <div>
+        <span class="eyebrow">
+            BIOMETRIC ENROLLMENT
+        </span>
+
+        <h2>
+            Capture face samples
+        </h2>
+
+        <p>
+            Follow each pose instruction carefully.
+            AttendAI Vision will capture 10 valid samples
+            for each of the five enrollment poses.
+        </p>
+    </div>
+
+    <div class="registration-status">
+        <span class="status-dot"></span>
+        Capture Session Active
+    </div>
+
+</section>
+
+
+<section class="capture-grid">
+
+    <article class="panel capture-camera-panel">
+
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">
+                    LIVE CAMERA
+                </span>
+
+                <h3>
+                    Face Capture
+                </h3>
+            </div>
+
+            <span
+                class="health-status"
+                id="camera-status"
+            >
+                Waiting
+            </span>
+        </div>
+
+
+        <div class="camera-stage">
+
+            <video
+                id="capture-video"
+                autoplay
+                playsinline
+                muted
+            ></video>
+
+            <canvas
+                id="capture-canvas"
+                hidden
+            ></canvas>
+
+
+            <div class="face-guide">
+                <div class="face-guide-frame"></div>
+            </div>
+
+
+            <div
+                class="capture-countdown"
+                id="capture-countdown"
+                hidden
+            ></div>
+
+
+            <div
+                class="capture-status"
+                id="capture-status"
+            >
+                Waiting for camera...
+            </div>
+
+
+            <div
+                class="camera-placeholder"
+                id="camera-placeholder"
+            >
+                <strong>
+                    Camera not started
+                </strong>
+
+                <span>
+                    Start the camera to begin biometric enrollment.
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="capture-controls">
+
+            <button
+                type="button"
+                class="primary-button"
+                id="start-camera-button"
+            >
+                Start Camera
+                <span>→</span>
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="stop-camera-button"
+                disabled
+            >
+                Stop Camera
+            </button>
+
+        </div>
+
+    </article>
+
+
+    <article class="panel capture-session-panel">
+
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">
+                    ENROLLMENT SESSION
+                </span>
+
+                <h3>
+                    Student Profile
+                </h3>
+            </div>
+        </div>
+
+
+        <div class="capture-student-card">
+
+            <div class="capture-student-avatar">
+                {{ student.name[0] | upper }}
+            </div>
+
+            <div>
+                <strong>
+                    {{ student.name }}
+                </strong>
+
+                <span>
+                    {{ student.roll_no }}
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="capture-details">
+
+            <div class="capture-detail-row">
+                <span>Roll Number</span>
+                <strong>{{ student.roll_no }}</strong>
+            </div>
+
+            <div class="capture-detail-row">
+                <span>Name</span>
+                <strong>{{ student.name }}</strong>
+            </div>
+
+            <div class="capture-detail-row">
+                <span>Department</span>
+                <strong>{{ student.department }}</strong>
+            </div>
+
+        </div>
+
+
+        <div class="capture-details">
+
+            <div class="capture-detail-row">
+                <span>Current Pose</span>
+
+                <strong id="current-pose-name">
+                    FRONT
+                </strong>
+            </div>
+
+            <div class="capture-detail-row">
+                <span>Pose Samples</span>
+
+                <strong id="pose-capture-count">
+                    0/{{ images_per_pose }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="capture-progress-block">
+
+            <div class="capture-progress-header">
+
+                <span>
+                    Total Samples Captured
+                </span>
+
+                <strong>
+                    <span id="capture-count">0</span>/{{ required_sample_count }}
+                </strong>
+
+            </div>
+
+            <div class="capture-progress-track">
+                <div
+                    class="capture-progress-fill"
+                    id="capture-progress-fill"
+                ></div>
+            </div>
+
+        </div>
+
+
+        <!-- Real backend-driven post-registration pipeline progress -->
+        <div
+            class="capture-progress-block"
+            id="pipeline-progress-panel"
+            hidden
+        >
+
+            <div class="capture-progress-header">
+
+                <span>
+                    Model Preparation
+                </span>
+
+                <strong id="pipeline-progress-text">
+                    0%
+                </strong>
+
+            </div>
+
+            <div class="capture-progress-track">
+                <div
+                    class="capture-progress-fill"
+                    id="pipeline-progress-fill"
+                    style="width: 0%;"
+                ></div>
+            </div>
+
+            <div class="capture-details">
+
+                <div class="capture-detail-row">
+                    <span>Current Stage</span>
+
+                    <strong id="pipeline-stage">
+                        Waiting
+                    </strong>
+                </div>
+
+            </div>
+
+            <div
+                class="capture-instruction"
+                id="pipeline-message"
+            >
+                Waiting for capture completion.
+            </div>
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="pipeline-retry-button"
+                hidden
+            >
+                Retry Model Preparation
+            </button>
+
+        </div>
+
+
+        <div
+            class="capture-instruction"
+            id="capture-instruction"
+        >
+            Start the camera and look straight
+            at the camera for the FRONT pose.
+        </div>
+
+    </article>
+
+</section>
+
+
+<div
+    id="registration-session-data"
+    data-registration-token="{{ registration_token }}"
+    data-roll-no="{{ student.roll_no }}"
+    data-student-name="{{ student.name }}"
+    data-department="{{ student.department }}"
+    data-required-sample-count="{{ required_sample_count }}"
+    data-images-per-pose="{{ images_per_pose }}"
+    data-capture-interval-ms="{{ capture_interval_ms }}"
+    data-countdown-seconds="{{ countdown_seconds }}"
+    hidden
+></div>
+
+{% endblock %}

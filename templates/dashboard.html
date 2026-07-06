@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+
+{% block title %}
+Overview | AttendAI Vision
+{% endblock %}
+
+{% block content %}
+
+<section class="hero-panel">
+
+    <div class="hero-copy">
+
+        <span class="eyebrow">
+            AI-POWERED OPERATIONS
+        </span>
+
+        <h2>
+            Attendance intelligence,
+            <span>in real time.</span>
+        </h2>
+
+        <p>
+            A unified biometric attendance environment powered by
+            face detection, passive anti-spoofing, ArcFace embeddings,
+            and SVM recognition.
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="/register" class="primary-button">
+                Register Student
+                <span>→</span>
+            </a>
+
+            <a
+                href="/live-attendance"
+                class="primary-button"
+            >
+                Open Live Attendance
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-visual">
+
+        <div class="vision-orbit orbit-one"></div>
+        <div class="vision-orbit orbit-two"></div>
+
+        <div class="vision-core">
+            <div class="scan-line"></div>
+            <span>AI</span>
+        </div>
+
+        <div class="floating-node node-one">
+            <span></span>
+            YuNet
+        </div>
+
+        <div class="floating-node node-two">
+            <span></span>
+            ArcFace
+        </div>
+
+        <div class="floating-node node-three">
+            <span></span>
+            Anti-Spoof
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="metrics-grid">
+
+    <article class="metric-card">
+        <div class="metric-top">
+            <span class="metric-label">Registered Students</span>
+            <span class="metric-symbol">◫</span>
+        </div>
+
+        <strong
+            class="metric-value"
+            id="student-count"
+        >
+            {{ total_students }}
+        </strong>
+
+        <span class="metric-note">
+            Biometric profiles
+        </span>
+    </article>
+
+
+    <article class="metric-card">
+        <div class="metric-top">
+            <span class="metric-label">Present Today</span>
+            <span class="metric-symbol">✓</span>
+        </div>
+
+        <strong
+            class="metric-value"
+            id="present-count"
+        >
+            {{ present_today }}
+        </strong>
+
+        <span class="metric-note">
+            Today's verified attendance
+        </span>
+    </article>
+
+
+    <article class="metric-card">
+        <div class="metric-top">
+            <span class="metric-label">Recognition Model</span>
+            <span class="metric-symbol">◇</span>
+        </div>
+
+        <strong
+            class="metric-value metric-text"
+            id="model-status"
+        >
+            {% if model_ready %}
+                Ready
+            {% else %}
+                Not Ready
+            {% endif %}
+        </strong>
+
+        <span class="metric-note">
+            SVM classifier state
+        </span>
+    </article>
+
+
+    <article class="metric-card">
+        <div class="metric-top">
+            <span class="metric-label">System State</span>
+            <span class="metric-symbol">●</span>
+        </div>
+
+        <strong class="metric-value metric-text online-text">
+            Online
+        </strong>
+
+        <span class="metric-note">
+            Web control plane
+        </span>
+    </article>
+
+</section>
+
+
+<section class="dashboard-grid">
+
+    <article class="panel pipeline-panel">
+
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">CORE WORKFLOW</span>
+                <h3>AI Recognition Pipeline</h3>
+            </div>
+
+            <span class="live-badge">
+                <span class="status-dot"></span>
+                Active
+            </span>
+        </div>
+
+
+        <div class="pipeline-flow">
+
+            <div class="pipeline-stage">
+                <div class="stage-index">01</div>
+                <div>
+                    <strong>YuNet</strong>
+                    <span>Face Detection</span>
+                </div>
+            </div>
+
+            <div class="pipeline-connector">
+                <span></span>
+            </div>
+
+            <div class="pipeline-stage">
+                <div class="stage-index">02</div>
+                <div>
+                    <strong>Anti-Spoof</strong>
+                    <span>Liveness Validation</span>
+                </div>
+            </div>
+
+            <div class="pipeline-connector">
+                <span></span>
+            </div>
+
+            <div class="pipeline-stage">
+                <div class="stage-index">03</div>
+                <div>
+                    <strong>ArcFace</strong>
+                    <span>512-D Embedding</span>
+                </div>
+            </div>
+
+            <div class="pipeline-connector">
+                <span></span>
+            </div>
+
+            <div class="pipeline-stage">
+                <div class="stage-index">04</div>
+                <div>
+                    <strong>SVM</strong>
+                    <span>Identity Classification</span>
+                </div>
+            </div>
+
+        </div>
+
+    </article>
+
+
+    <article class="panel health-panel">
+
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">INFRASTRUCTURE</span>
+                <h3>System Health</h3>
+            </div>
+        </div>
+
+
+        <div class="health-list">
+
+            <div class="health-row">
+                <div>
+                    <strong>SVM Model</strong>
+                    <span>Classifier artifact</span>
+                </div>
+
+                <span
+                    class="health-status"
+                    id="health-svm"
+                >
+                    Checking
+                </span>
+            </div>
+
+
+            <div class="health-row">
+                <div>
+                    <strong>Label Encoder</strong>
+                    <span>Identity mapping</span>
+                </div>
+
+                <span
+                    class="health-status"
+                    id="health-encoder"
+                >
+                    Checking
+                </span>
+            </div>
+
+
+            <div class="health-row">
+                <div>
+                    <strong>Student Database</strong>
+                    <span>Registration records</span>
+                </div>
+
+                <span
+                    class="health-status"
+                    id="health-students"
+                >
+                    Checking
+                </span>
+            </div>
+
+
+            <div class="health-row">
+                <div>
+                    <strong>Attendance Store</strong>
+                    <span>Daily presence records</span>
+                </div>
+
+                <span
+                    class="health-status"
+                    id="health-attendance"
+                >
+                    Checking
+                </span>
+            </div>
+
+        </div>
+
+    </article>
+
+</section>
+
+
+<section class="panel activity-panel">
+
+    <div class="panel-header">
+
+        <div>
+            <span class="eyebrow">
+                RECENT OPERATIONS
+            </span>
+
+            <h3>
+                Recognition Activity
+            </h3>
+        </div>
+
+
+        <div class="activity-header-actions">
+
+            <span class="activity-record-count">
+                {{ total_attendance_records }} Total Records
+            </span>
+
+            <a
+                href="/attendance"
+                class="text-button"
+            >
+                View all
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if recent_attendance %}
+
+    <div class="recent-activity-list">
+
+        {% for record in recent_attendance %}
+
+        <div class="recent-activity-row">
+
+            <div class="recent-activity-identity">
+
+                <div class="recent-activity-avatar">
+                    {{ record.name[0] | upper }}
+                </div>
+
+                <div>
+                    <strong>
+                        {{ record.name }}
+                    </strong>
+
+                    <span>
+                        {{ record.roll_no }}
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="recent-activity-meta">
+
+                <div>
+                    <span class="recent-activity-label">
+                        Date
+                    </span>
+
+                    <strong>
+                        {{ record.date }}
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span class="recent-activity-label">
+                        Time
+                    </span>
+
+                    <strong>
+                        {{ record.time }}
+                    </strong>
+                </div>
+
+
+                <span class="attendance-present-badge">
+                    <span class="status-dot"></span>
+                    {{ record.status }}
+                </span>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-visual">
+            <span></span>
+        </div>
+
+        <strong>
+            No recognition activity yet
+        </strong>
+
+        <p>
+            Verified attendance activity will appear here
+            after the first successful recognition.
+        </p>
+
+        <a
+            href="/live-attendance"
+            class="primary-button"
+        >
+            Open Live Attendance
+            <span>→</span>
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

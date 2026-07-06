@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Attendance | AttendAI Vision{% endblock %}
+{% block content %}
+<section class="registration-header"><div><span class="eyebrow">ATTENDANCE MANAGEMENT</span><h2>Attendance Records</h2>
+<p>Attendance is marked once per student per day.</p></div><div class="registration-status"><span class="status-dot"></span>{{ attendance_count }} Records</div></section>
+<section class="panel attendance-records-panel">
+<div class="panel-header"><div><span class="eyebrow">VERIFIED LOG</span><h3>Attendance History</h3></div>
+<a href="/live-attendance" class="primary-button">Open Live Attendance →</a></div>
+{% if attendance_records %}
+<div class="attendance-table-wrapper"><table class="attendance-table"><thead><tr><th>Student</th><th>Roll Number</th><th>Date</th><th>Time</th><th>Status</th></tr></thead>
+<tbody id="attendance-table-body">{% for record in attendance_records %}
+<tr data-attendance-date="{{ record.date }}"><td>{{ record.name }}</td><td>{{ record.roll_no }}</td><td>{{ record.date }}</td><td>{{ record.time }}</td><td>{{ record.status }}</td></tr>
+{% endfor %}</tbody></table></div>
+{% else %}<div class="attendance-empty-state"><h3>No attendance records</h3></div>{% endif %}
+</section>
+{% endblock %}

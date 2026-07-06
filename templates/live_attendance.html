@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}
+Live Attendance | AttendAI Vision
+{% endblock %}
+
+{% block content %}
+
+<section class="registration-header">
+
+    <div>
+        <span class="eyebrow">
+            REAL-TIME RECOGNITION
+        </span>
+
+        <h2>
+            Live Attendance
+        </h2>
+
+        <p>
+            Verify liveness, recognize registered students,
+            and mark attendance automatically.
+        </p>
+    </div>
+
+    <div class="registration-status">
+        <span class="status-dot"></span>
+        Attendance Ready
+    </div>
+
+</section>
+
+
+<section class="capture-grid">
+
+    <!-- ============================================================= -->
+    <!-- LIVE CAMERA PANEL                                             -->
+    <!-- ============================================================= -->
+
+    <article class="panel capture-camera-panel">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="eyebrow">
+                    LIVE CAMERA
+                </span>
+
+                <h3>
+                    Recognition Feed
+                </h3>
+            </div>
+
+            <span
+                class="health-status"
+                id="attendance-camera-status"
+            >
+                Waiting
+            </span>
+
+        </div>
+
+
+        <div class="camera-stage">
+
+            <video
+                id="attendance-video"
+                autoplay
+                playsinline
+                muted
+            ></video>
+
+            <canvas
+                id="attendance-canvas"
+                hidden
+            ></canvas>
+
+
+            <div class="face-guide">
+                <div class="face-guide-frame"></div>
+            </div>
+
+
+            <div
+                class="capture-status"
+                id="attendance-status"
+            >
+                Start the camera to begin attendance recognition.
+            </div>
+
+
+            <div
+                class="camera-placeholder"
+                id="attendance-camera-placeholder"
+            >
+                <strong>
+                    Camera not started
+                </strong>
+
+                <span>
+                    Start the camera to begin live attendance.
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="capture-controls">
+
+            <button
+                type="button"
+                class="primary-button"
+                id="start-attendance-camera-button"
+                {% if not model_ready %}disabled{% endif %}
+            >
+                Start Camera
+                <span>→</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="stop-attendance-camera-button"
+                disabled
+            >
+                Stop Camera
+            </button>
+
+        </div>
+
+    </article>
+
+
+    <!-- ============================================================= -->
+    <!-- RECOGNITION RESULT PANEL                                      -->
+    <!-- ============================================================= -->
+
+    <article class="panel capture-session-panel">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="eyebrow">
+                    RECOGNITION RESULT
+                </span>
+
+                <h3>
+                    Attendance Status
+                </h3>
+            </div>
+
+        </div>
+
+
+        {% if not model_ready %}
+
+        <div class="capture-instruction">
+            Recognition model is not ready.
+            Register at least two students and train the SVM model first.
+        </div>
+
+        {% else %}
+
+        <div class="capture-student-card">
+
+            <div
+                class="capture-student-avatar"
+                id="attendance-student-avatar"
+            >
+                ?
+            </div>
+
+            <div>
+                <strong id="attendance-student-name">
+                    Waiting for recognition
+                </strong>
+
+                <span id="attendance-student-roll">
+                    No student detected
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="capture-details">
+
+            <div class="capture-detail-row">
+                <span>
+                    Recognition
+                </span>
+
+                <strong id="attendance-recognition-result">
+                    Waiting
+                </strong>
+            </div>
+
+
+            <div class="capture-detail-row">
+                <span>
+                    Confidence
+                </span>
+
+                <strong id="attendance-confidence">
+                    --%
+                </strong>
+            </div>
+
+
+            <div class="capture-detail-row">
+                <span>
+                    Liveness
+                </span>
+
+                <strong id="attendance-liveness">
+                    --%
+                </strong>
+            </div>
+
+
+            <div class="capture-detail-row">
+                <span>
+                    Attendance
+                </span>
+
+                <strong id="attendance-mark-result">
+                    Not marked
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div
+            class="capture-instruction"
+            id="attendance-instruction"
+        >
+            Position exactly one face inside the guide.
+        </div>
+
+        {% endif %}
+
+    </article>
+
+</section>
+
+
+<div
+    id="attendance-page-data"
+    data-model-ready="{{ 'true' if model_ready else 'false' }}"
+    data-confidence-threshold="{{ confidence_threshold }}"
+    hidden
+></div>
+
+{% endblock %}

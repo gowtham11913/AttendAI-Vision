@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+
+{% block title %}
+Settings | AttendAI Vision
+{% endblock %}
+
+{% block content %}
+
+<section class="registration-header">
+
+    <div>
+        <span class="eyebrow">
+            SYSTEM CONFIGURATION
+        </span>
+
+        <h2>
+            Runtime Settings
+        </h2>
+
+        <p>
+            Configure face recognition, liveness validation,
+            attendance behavior, and camera preferences.
+        </p>
+    </div>
+
+    <div class="registration-status">
+        <span class="status-dot"></span>
+        Configuration Active
+    </div>
+
+</section>
+
+
+<form
+    id="settings-form"
+    class="settings-form"
+>
+
+    <section class="settings-grid">
+
+        <article class="panel settings-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="eyebrow">
+                        FACE RECOGNITION
+                    </span>
+
+                    <h3>
+                        Recognition Threshold
+                    </h3>
+                </div>
+
+                <span
+                    class="settings-value-badge"
+                    id="recognition-threshold-value"
+                >
+                    {{ "%.0f"|format(
+                        settings.recognition_confidence_threshold * 100
+                    ) }}%
+                </span>
+
+            </div>
+
+
+            <p class="settings-description">
+                Minimum SVM prediction probability required
+                before an identity is accepted as a known student.
+            </p>
+
+
+            <div class="settings-control">
+
+                <input
+                    type="range"
+                    id="recognition-confidence-threshold"
+                    name="recognition_confidence_threshold"
+                    min="0.50"
+                    max="1.00"
+                    step="0.01"
+                    value="{{ settings.recognition_confidence_threshold }}"
+                >
+
+                <div class="settings-range-labels">
+                    <span>50%</span>
+                    <span>100%</span>
+                </div>
+
+            </div>
+
+
+            <div class="settings-hint">
+                Current recommended value: 90%
+            </div>
+
+        </article>
+        
+
+
+        <article class="panel settings-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="eyebrow">
+                        IDENTITY VERIFICATION
+                    </span>
+
+                    <h3>
+                        ArcFace Verification Threshold
+                    </h3>
+                </div>
+
+                <span
+                    class="settings-value-badge"
+                    id="arcface-verification-threshold-value"
+                >
+                    {{ "%.0f"|format(
+                        settings.arcface_verification_threshold * 100
+                    ) }}%
+                </span>
+
+            </div>
+
+
+            <p class="settings-description">
+                Minimum cosine similarity required to confirm
+                that the SVM candidate matches the student's
+                stored ArcFace embeddings.
+            </p>
+
+
+            <div class="settings-control">
+
+                <input
+                    type="range"
+                    id="arcface-verification-threshold"
+                    name="arcface_verification_threshold"
+                    min="0.20"
+                    max="0.90"
+                    step="0.01"
+                    value="{{ settings.arcface_verification_threshold }}"
+                >
+
+                <div class="settings-range-labels">
+                    <span>20%</span>
+                    <span>90%</span>
+                </div>
+
+            </div>
+
+
+            <div class="settings-hint">
+                Current configured value:
+                {{ "%.0f"|format(
+                    settings.arcface_verification_threshold * 100
+                ) }}%
+            </div>
+
+        </article>
+
+        
+
+
+        <article class="panel settings-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="eyebrow">
+                        ANTI-SPOOFING
+                    </span>
+
+                    <h3>
+                        Liveness Threshold
+                    </h3>
+                </div>
+
+                <span
+                    class="settings-value-badge"
+                    id="liveness-threshold-value"
+                >
+                    {{ "%.0f"|format(
+                        settings.liveness_score_threshold * 100
+                    ) }}%
+                </span>
+
+            </div>
+
+
+            <p class="settings-description">
+                Minimum passive anti-spoofing score required
+                before a detected face is treated as live.
+            </p>
+
+
+            <div class="settings-control">
+
+                <input
+                    type="range"
+                    id="liveness-score-threshold"
+                    name="liveness_score_threshold"
+                    min="0.30"
+                    max="1.00"
+                    step="0.01"
+                    value="{{ settings.liveness_score_threshold }}"
+                >
+
+                <div class="settings-range-labels">
+                    <span>30%</span>
+                    <span>100%</span>
+                </div>
+
+            </div>
+
+
+            <div class="settings-hint">
+                Current recommended value: 70%
+            </div>
+
+        </article>
+
+
+        <article class="panel settings-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="eyebrow">
+                        ATTENDANCE POLICY
+                    </span>
+
+                    <h3>
+                        Daily Attendance
+                    </h3>
+                </div>
+
+            </div>
+
+
+            <p class="settings-description">
+                Control whether a student should have only
+                one attendance record per calendar day.
+            </p>
+
+
+            <label class="settings-toggle-row">
+
+                <div>
+                    <strong>
+                        Once per day
+                    </strong>
+
+                    <span>
+                        Prevent duplicate daily attendance entries
+                    </span>
+                </div>
+
+                <input
+                    type="checkbox"
+                    id="attendance-once-per-day"
+                    name="attendance_once_per_day"
+                    {% if settings.attendance_once_per_day %}
+                    checked
+                    {% endif %}
+                >
+
+                <span class="settings-toggle"></span>
+
+            </label>
+
+        </article>
+
+
+        <article class="panel settings-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="eyebrow">
+                        CAMERA
+                    </span>
+
+                    <h3>
+                        Camera Device
+                    </h3>
+                </div>
+
+            </div>
+
+
+            <p class="settings-description">
+                Select the OpenCV camera index used by the
+                local desktop attendance pipeline.
+            </p>
+
+
+            <div class="settings-field">
+
+                <label for="camera-index">
+                    Camera Index
+                </label>
+
+                <input
+                    type="number"
+                    id="camera-index"
+                    name="camera_index"
+                    min="0"
+                    step="1"
+                    value="{{ settings.camera_index }}"
+                >
+
+            </div>
+
+
+            <div class="settings-hint">
+                Most built-in laptop cameras use index 0.
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <section class="panel settings-save-panel">
+
+        <div>
+
+            <span class="eyebrow">
+                PERSISTENT CONFIGURATION
+            </span>
+
+            <h3>
+                Save Runtime Settings
+            </h3>
+
+            <p>
+                Threshold changes are persisted to
+                <strong>database/settings.json</strong>.
+                Recognition and liveness thresholds are applied
+                immediately to the running web pipeline.
+            </p>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="primary-button"
+            id="save-settings-button"
+        >
+            Save Settings
+            <span>→</span>
+        </button>
+
+    </section>
+
+</form>
+
+{% endblock %}

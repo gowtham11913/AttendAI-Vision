@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}
+Students | AttendAI Vision
+{% endblock %}
+
+{% block content %}
+
+<section class="registration-header">
+    <div>
+        <span class="eyebrow">STUDENT MANAGEMENT</span>
+
+        <h2>Registered Students</h2>
+
+        <p>
+            Edit, activate, deactivate, delete,
+            or re-enroll biometric profiles.
+        </p>
+    </div>
+
+    <div class="registration-status">
+        <span class="status-dot"></span>
+        {{ student_count }} Registered
+    </div>
+</section>
+
+
+<section class="panel students-panel">
+
+    <div class="panel-header">
+        <div>
+            <span class="eyebrow">STUDENT DATABASE</span>
+            <h3>Enrollment Records</h3>
+        </div>
+
+        <a href="/register" class="primary-button">
+            Register Student
+            <span>＋</span>
+        </a>
+    </div>
+
+
+    {% if students %}
+
+    <div class="students-table-wrapper">
+
+        <table class="students-table">
+
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Roll Number</th>
+                    <th>Department</th>
+                    <th>Face Samples</th>
+                    <th>Registered</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for student in students %}
+
+                {% set is_active =
+                    student.is_active|string|lower
+                    not in ["false", "0", "no", "inactive"]
+                %}
+
+                <tr>
+
+                    <td>
+                        <div class="student-table-profile">
+
+                            <div class="student-table-avatar">
+                                {{ student.name[0] | upper }}
+                            </div>
+
+                            <div>
+                                <strong>{{ student.name }}</strong>
+                                <span>Biometric profile</span>
+                            </div>
+
+                        </div>
+                    </td>
+
+
+                    <td>
+                        <strong class="student-roll-number">
+                            {{ student.roll_no }}
+                        </strong>
+                    </td>
+
+
+                    <td>
+                        {{ student.department }}
+                    </td>
+
+
+                    <td>
+                        <span class="sample-count-badge">
+                            {{ student.image_count }}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        {{ student.registered_date }}
+                    </td>
+
+
+                    <td>
+                        {% if is_active %}
+
+                        <span class="student-status-badge student-status-active">
+                            <span class="status-dot"></span>
+                            Active
+                        </span>
+
+                        {% else %}
+
+                        <span class="student-status-badge student-status-inactive">
+                            Inactive
+                        </span>
+
+                        {% endif %}
+                    </td>
+
+
+                    <td>
+                        <div class="student-actions">
+
+                            <button
+                                type="button"
+                                class="student-action-button student-action-edit"
+                                data-student-edit
+                                data-roll="{{ student.roll_no }}"
+                                data-name="{{ student.name }}"
+                                data-department="{{ student.department }}"
+                                title="Edit student name and department"
+                            >
+                                Edit
+                            </button>
+
+
+                            {% if is_active %}
+
+                            <button
+                                type="button"
+                                class="student-action-button student-action-deactivate"
+                                data-student-action="deactivate"
+                                data-roll="{{ student.roll_no }}"
+                                title="Deactivate this student and block attendance recognition"
+                            >
+                                Deactivate
+                            </button>
+
+                            {% else %}
+
+                            <button
+                                type="button"
+                                class="student-action-button student-action-activate"
+                                data-student-action="activate"
+                                data-roll="{{ student.roll_no }}"
+                                title="Activate this student and allow attendance recognition"
+                            >
+                                Activate
+                            </button>
+
+                            {% endif %}
+
+
+                            <button
+                                type="button"
+                                class="student-action-button student-action-reenroll"
+                                data-student-action="reenroll"
+                                data-roll="{{ student.roll_no }}"
+                                title="Capture new face samples and rebuild biometric recognition"
+                            >
+                                Re-enroll Face
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="student-action-button student-action-delete"
+                                data-student-action="delete"
+                                data-roll="{{ student.roll_no }}"
+                                title="Permanently delete student profile, attendance, face images and embeddings"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="students-empty-state">
+
+        <h3>No students registered</h3>
+
+        <a href="/register" class="primary-button">
+            Register First Student
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

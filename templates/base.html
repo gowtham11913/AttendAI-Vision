@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="AttendAI Vision - Intelligent Face Recognition Attendance Platform"
+    >
+
+    <title>
+        {% block title %}
+        {{ page_title }} | AttendAI Vision
+        {% endblock %}
+    </title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='/css/app.css') }}?v=11"
+    >
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-mark">
+                <span class="brand-core"></span>
+            </div>
+
+            <div class="brand-copy">
+                <strong>AttendAI</strong>
+                <span>Vision Intelligence</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="/"
+                class="nav-item {% if active_page == 'overview' %}active{% endif %}"
+            >
+                <span class="nav-icon">⌂</span>
+                <span>Overview</span>
+            </a>
+
+            <a
+                href="/register"
+                class="nav-item {% if active_page == 'register' %}active{% endif %}"
+            >
+                <span class="nav-icon">＋</span>
+                <span>Register Student</span>
+            </a>
+
+            <a
+                href="/live-attendance"
+                class="nav-item {% if active_page == 'live_attendance' %}active{% endif %}"
+            >
+                <span class="nav-icon">◎</span>
+                <span>Live Attendance</span>
+            </a>
+
+            <a
+                href="/students"
+                class="nav-item {% if active_page == 'students' %}active{% endif %}"
+            >
+                <span class="nav-icon">◫</span>
+                <span>Students</span>
+            </a>
+
+            <a
+                href="/attendance"
+                class="nav-item {% if active_page == 'attendance' %}active{% endif %}"
+            >
+                <span class="nav-icon">▦</span>
+                <span>Attendance</span>
+            </a>
+
+            <a
+                href="/analytics"
+                class="nav-item {% if active_page == 'analytics' %}active{% endif %}"
+            >
+                <span class="nav-icon">⌁</span>
+                <span>Analytics</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="engine-card">
+                <div class="engine-header">
+                    <span class="status-dot"></span>
+                    <span>AI Engine</span>
+                </div>
+
+                <strong id="sidebar-engine-status">
+                    Checking...
+                </strong>
+
+                <small>
+                    YuNet · ArcFace · SVM
+                </small>
+            </div>
+
+            <a
+                href="/settings"
+                class="nav-item {% if active_page == 'settings' %}active{% endif %}"
+            >
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="menu-button"
+                    id="menu-button"
+                    aria-label="Toggle navigation"
+                >
+                    ☰
+                </button>
+
+                <div>
+                    <h1>{{ page_title }}</h1>
+                    <p>Intelligent attendance operations</p>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="live-clock">
+                    <span id="current-time">--:--:--</span>
+                    <small id="current-date">Loading date...</small>
+                </div>
+
+                <div class="system-pill">
+                    <span class="status-dot"></span>
+                    <span>System Online</span>
+                </div>
+
+                <div class="profile-chip">
+                    <div class="profile-avatar">A</div>
+
+                    <div>
+                        <strong>Administrator</strong>
+                        <small>System Control</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="page-content">
+            {% block content %}{% endblock %}
+        </section>
+
+    </main>
+
+</div>
+
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="{{ url_for('static', path='/js/app.js') }}?v=18"></script>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>
+

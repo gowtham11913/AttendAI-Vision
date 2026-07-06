@@ -1,0 +1,89 @@
+# =========================================================
+# AttendAI Vision - Git Ignore Rules
+# =========================================================
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Logs
+logs/
+*.log
+
+# Student biometric face datasets
+dataset/
+datasets/
+
+# Facial embeddings
+embeddings/
+*.npy
+*.npz
+
+# Trained ML models
+*.pkl
+*.pickle
+*.joblib
+
+# Downloaded AI / ONNX models
+models/
+*.onnx
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Local attendance / generated data
+attendance/
+attendance_data/
+exports/
+reports/
+
+# Generated CSV files
+*.csv
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build / package files
+build/
+dist/
+*.egg-info/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Local backup folders
+backup_web_pose/
+
+# Development artifacts
+temp.txt
+current_structure.txt

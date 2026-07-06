@@ -1,0 +1,7 @@
+{
+  "recognition_confidence_threshold": 0.9,
+  "liveness_score_threshold": 0.7,
+  "attendance_once_per_day": true,
+  "camera_index": 0,
+  "arcface_verification_threshold": 0.5
+}
