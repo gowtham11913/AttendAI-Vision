@@ -15,8 +15,8 @@ Overview | AttendAI Vision
         </span>
 
         <h2>
-            Attendance intelligence,
-            <span>in real time.</span>
+            AttendAI
+            <span>Vision</span>
         </h2>
 
         <p>
@@ -44,34 +44,16 @@ Overview | AttendAI Vision
 
     </div>
 
-
-    <div class="hero-visual">
-
-        <div class="vision-orbit orbit-one"></div>
-        <div class="vision-orbit orbit-two"></div>
-
-        <div class="vision-core">
-            <div class="scan-line"></div>
-            <span>AI</span>
-        </div>
-
-        <div class="floating-node node-one">
-            <span></span>
-            YuNet
-        </div>
-
-        <div class="floating-node node-two">
-            <span></span>
-            ArcFace
-        </div>
-
-        <div class="floating-node node-three">
-            <span></span>
-            Anti-Spoof
-        </div>
-
+    <div class="hero-media" aria-label="Face recognition visualization">
+        <img
+            src="{{ url_for('static', path='/images/face-recognition-hero.jpg') }}"
+            alt="Digital face recognition visualization"
+            class="hero-media-image"
+            loading="eager"
+            decoding="async"
+        >
+        <div class="hero-media-shade" aria-hidden="true"></div>
     </div>
-
 </section>
 
 
@@ -156,150 +138,7 @@ Overview | AttendAI Vision
 </section>
 
 
-<section class="dashboard-grid">
 
-    <article class="panel pipeline-panel">
-
-        <div class="panel-header">
-            <div>
-                <span class="eyebrow">CORE WORKFLOW</span>
-                <h3>AI Recognition Pipeline</h3>
-            </div>
-
-            <span class="live-badge">
-                <span class="status-dot"></span>
-                Active
-            </span>
-        </div>
-
-
-        <div class="pipeline-flow">
-
-            <div class="pipeline-stage">
-                <div class="stage-index">01</div>
-                <div>
-                    <strong>YuNet</strong>
-                    <span>Face Detection</span>
-                </div>
-            </div>
-
-            <div class="pipeline-connector">
-                <span></span>
-            </div>
-
-            <div class="pipeline-stage">
-                <div class="stage-index">02</div>
-                <div>
-                    <strong>Anti-Spoof</strong>
-                    <span>Liveness Validation</span>
-                </div>
-            </div>
-
-            <div class="pipeline-connector">
-                <span></span>
-            </div>
-
-            <div class="pipeline-stage">
-                <div class="stage-index">03</div>
-                <div>
-                    <strong>ArcFace</strong>
-                    <span>512-D Embedding</span>
-                </div>
-            </div>
-
-            <div class="pipeline-connector">
-                <span></span>
-            </div>
-
-            <div class="pipeline-stage">
-                <div class="stage-index">04</div>
-                <div>
-                    <strong>SVM</strong>
-                    <span>Identity Classification</span>
-                </div>
-            </div>
-
-        </div>
-
-    </article>
-
-
-    <article class="panel health-panel">
-
-        <div class="panel-header">
-            <div>
-                <span class="eyebrow">INFRASTRUCTURE</span>
-                <h3>System Health</h3>
-            </div>
-        </div>
-
-
-        <div class="health-list">
-
-            <div class="health-row">
-                <div>
-                    <strong>SVM Model</strong>
-                    <span>Classifier artifact</span>
-                </div>
-
-                <span
-                    class="health-status"
-                    id="health-svm"
-                >
-                    Checking
-                </span>
-            </div>
-
-
-            <div class="health-row">
-                <div>
-                    <strong>Label Encoder</strong>
-                    <span>Identity mapping</span>
-                </div>
-
-                <span
-                    class="health-status"
-                    id="health-encoder"
-                >
-                    Checking
-                </span>
-            </div>
-
-
-            <div class="health-row">
-                <div>
-                    <strong>Student Database</strong>
-                    <span>Registration records</span>
-                </div>
-
-                <span
-                    class="health-status"
-                    id="health-students"
-                >
-                    Checking
-                </span>
-            </div>
-
-
-            <div class="health-row">
-                <div>
-                    <strong>Attendance Store</strong>
-                    <span>Daily presence records</span>
-                </div>
-
-                <span
-                    class="health-status"
-                    id="health-attendance"
-                >
-                    Checking
-                </span>
-            </div>
-
-        </div>
-
-    </article>
-
-</section>
 
 
 <section class="panel activity-panel">

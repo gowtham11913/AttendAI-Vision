@@ -2951,3 +2951,168 @@ function initSettingsPage() {
         }
     );
 }
+
+function updateDateTime() {
+    const timeElement = document.getElementById("current-time");
+    const dateElement = document.getElementById("current-date");
+
+    if (!timeElement || !dateElement) {
+        return;
+    }
+
+    const now = new Date();
+
+    timeElement.textContent = now.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+
+    dateElement.textContent = now.toLocaleDateString("en-IN", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+updateDateTime();
+setInterval(updateDateTime, 1000);
+
+/* =========================================================
+   Analytics Chart
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const chartCanvas = document.getElementById(
+        "daily-attendance-chart"
+    );
+
+    const chartDataElement = document.getElementById(
+        "analytics-chart-data"
+    );
+
+    if (!chartCanvas || !chartDataElement) {
+        return;
+    }
+
+    let chartData;
+
+    try {
+        chartData = JSON.parse(
+            chartDataElement.textContent
+        );
+    } catch (error) {
+        console.error(
+            "Unable to parse analytics chart data:",
+            error
+        );
+        return;
+    }
+
+    const labels = chartData.labels || [];
+    const counts = chartData.counts || [];
+
+    if (!labels.length || !counts.length) {
+        return;
+    }
+
+    if (typeof Chart === "undefined") {
+        console.error(
+            "Chart.js is not loaded."
+        );
+        return;
+    }
+
+    new Chart(chartCanvas, {
+        type: "line",
+
+        data: {
+            labels: labels,
+
+            datasets: [
+                {
+                    label: "Students Present",
+                    data: counts,
+
+                    borderColor: "#1e3452",
+                    backgroundColor: "rgba(30, 52, 82, 0.10)",
+
+                    borderWidth: 2,
+                    tension: 0.35,
+
+                    fill: true,
+
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+
+                    pointBackgroundColor: "#9a7540",
+                    pointBorderColor: "#ffffff",
+                    pointBorderWidth: 2
+                }
+            ]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            interaction: {
+                intersect: false,
+                mode: "index"
+            },
+
+            plugins: {
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+                    displayColors: false,
+
+                    callbacks: {
+                        label: function(context) {
+                            return (
+                                context.parsed.y +
+                                " student(s) present"
+                            );
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: "#687383",
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0,
+                        color: "#687383",
+
+                        font: {
+                            size: 10
+                        }
+                    },
+
+                    grid: {
+                        color: "rgba(104, 115, 131, 0.12)"
+                    }
+                }
+            }
+        }
+    });
+});
