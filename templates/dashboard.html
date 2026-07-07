@@ -11,7 +11,7 @@ Overview | AttendAI Vision
     <div class="hero-copy">
 
         <span class="eyebrow">
-            AI-POWERED OPERATIONS
+            INTELLIGENT ATTENDANCE
         </span>
 
         <h2>
@@ -20,16 +20,25 @@ Overview | AttendAI Vision
         </h2>
 
         <p>
-            A unified biometric attendance environment powered by
-            face detection, passive anti-spoofing, ArcFace embeddings,
-            and SVM recognition.
+            An intelligent attendance platform that identifies registered
+            students in real time, verifies genuine presence, and records
+            attendance automatically for accurate and efficient classroom
+            management.
         </p>
 
         <div class="hero-actions">
 
             <a href="/register" class="primary-button">
                 Register Student
-                <span>→</span>
+
+                <svg
+                    class="button-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M5 12h14"></path>
+                    <path d="m13 6 6 6-6 6"></path>
+                </svg>
             </a>
 
             <a
@@ -37,32 +46,64 @@ Overview | AttendAI Vision
                 class="primary-button"
             >
                 Open Live Attendance
-                <span>→</span>
+
+                <svg
+                    class="button-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M5 12h14"></path>
+                    <path d="m13 6 6 6-6 6"></path>
+                </svg>
             </a>
 
         </div>
 
     </div>
 
-    <div class="hero-media" aria-label="Face recognition visualization">
+
+    <div
+        class="hero-media"
+        aria-label="Attendance verification visualization"
+    >
         <img
             src="{{ url_for('static', path='/images/face-recognition-hero.jpg') }}"
-            alt="Digital face recognition visualization"
+            alt="Digital attendance verification visualization"
             class="hero-media-image"
             loading="eager"
             decoding="async"
         >
-        <div class="hero-media-shade" aria-hidden="true"></div>
+
+        <div
+            class="hero-media-shade"
+            aria-hidden="true"
+        ></div>
     </div>
+
 </section>
 
 
 <section class="metrics-grid">
 
+    <!-- REGISTERED STUDENTS -->
+
     <article class="metric-card">
+
         <div class="metric-top">
-            <span class="metric-label">Registered Students</span>
-            <span class="metric-symbol">◫</span>
+
+            <span class="metric-label">
+                Registered Students
+            </span>
+
+            <span class="metric-symbol">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </span>
+
         </div>
 
         <strong
@@ -73,15 +114,28 @@ Overview | AttendAI Vision
         </strong>
 
         <span class="metric-note">
-            Biometric profiles
+            Active student records
         </span>
+
     </article>
 
 
+    <!-- PRESENT TODAY -->
+
     <article class="metric-card">
+
         <div class="metric-top">
-            <span class="metric-label">Present Today</span>
-            <span class="metric-symbol">✓</span>
+
+            <span class="metric-label">
+                Present Today
+            </span>
+
+            <span class="metric-symbol">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+            </span>
+
         </div>
 
         <strong
@@ -92,15 +146,29 @@ Overview | AttendAI Vision
         </strong>
 
         <span class="metric-note">
-            Today's verified attendance
+            Attendance confirmed today
         </span>
+
     </article>
 
 
+    <!-- ATTENDANCE SERVICE -->
+
     <article class="metric-card">
+
         <div class="metric-top">
-            <span class="metric-label">Recognition Model</span>
-            <span class="metric-symbol">◇</span>
+
+            <span class="metric-label">
+                Attendance Service
+            </span>
+
+            <span class="metric-symbol">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M8 12l2.5 2.5L16 9"></path>
+                </svg>
+            </span>
+
         </div>
 
         <strong
@@ -110,35 +178,49 @@ Overview | AttendAI Vision
             {% if model_ready %}
                 Ready
             {% else %}
-                Not Ready
+                Unavailable
             {% endif %}
         </strong>
 
         <span class="metric-note">
-            SVM classifier state
+            Student verification available
         </span>
+
     </article>
 
 
+    <!-- SYSTEM AVAILABILITY -->
+
     <article class="metric-card">
+
         <div class="metric-top">
-            <span class="metric-label">System State</span>
-            <span class="metric-symbol">●</span>
+
+            <span class="metric-label">
+                System Availability
+            </span>
+
+            <span class="metric-symbol">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M8 12l2.5 2.5L16 9"></path>
+                </svg>
+            </span>
+
         </div>
 
-        <strong class="metric-value metric-text online-text">
+        <strong
+            class="metric-value metric-text online-text"
+        >
             Online
         </strong>
 
         <span class="metric-note">
-            Web control plane
+            Attendance services operational
         </span>
+
     </article>
 
 </section>
-
-
-
 
 
 <section class="panel activity-panel">
@@ -146,13 +228,15 @@ Overview | AttendAI Vision
     <div class="panel-header">
 
         <div>
+
             <span class="eyebrow">
-                RECENT OPERATIONS
+                RECENT ATTENDANCE
             </span>
 
             <h3>
-                Recognition Activity
+                Attendance Activity
             </h3>
+
         </div>
 
 
@@ -189,6 +273,7 @@ Overview | AttendAI Vision
                 </div>
 
                 <div>
+
                     <strong>
                         {{ record.name }}
                     </strong>
@@ -196,6 +281,7 @@ Overview | AttendAI Vision
                     <span>
                         {{ record.roll_no }}
                     </span>
+
                 </div>
 
             </div>
@@ -204,6 +290,7 @@ Overview | AttendAI Vision
             <div class="recent-activity-meta">
 
                 <div>
+
                     <span class="recent-activity-label">
                         Date
                     </span>
@@ -211,10 +298,12 @@ Overview | AttendAI Vision
                     <strong>
                         {{ record.date }}
                     </strong>
+
                 </div>
 
 
                 <div>
+
                     <span class="recent-activity-label">
                         Time
                     </span>
@@ -222,6 +311,7 @@ Overview | AttendAI Vision
                     <strong>
                         {{ record.time }}
                     </strong>
+
                 </div>
 
 
@@ -247,12 +337,12 @@ Overview | AttendAI Vision
         </div>
 
         <strong>
-            No recognition activity yet
+            No attendance activity yet
         </strong>
 
         <p>
-            Verified attendance activity will appear here
-            after the first successful recognition.
+            Confirmed attendance activity will appear here
+            after the first successful attendance entry.
         </p>
 
         <a
@@ -260,7 +350,16 @@ Overview | AttendAI Vision
             class="primary-button"
         >
             Open Live Attendance
-            <span>→</span>
+
+            <svg
+                class="button-icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+            </svg>
+
         </a>
 
     </div>
@@ -268,5 +367,134 @@ Overview | AttendAI Vision
     {% endif %}
 
 </section>
+
+
+<style>
+/* =========================================================
+   COMPACT OVERVIEW HERO ONLY
+   Reduces the large hero box without affecting other pages
+   ========================================================= */
+
+.hero-panel {
+    min-height: 460px !important;
+    padding: 38px 54px !important;
+    gap: 42px !important;
+}
+
+
+/* LEFT HERO CONTENT */
+
+.hero-copy {
+    padding: 0 !important;
+    min-width: 0;
+}
+
+.hero-copy .eyebrow {
+    margin-bottom: 14px !important;
+}
+
+.hero-copy h2 {
+    margin: 0 !important;
+    font-size: clamp(3rem, 4.5vw, 4.5rem) !important;
+    line-height: 0.98 !important;
+}
+
+
+/* DESCRIPTION */
+
+.hero-copy p {
+    margin: 22px 0 0 !important;
+    max-width: 590px !important;
+    font-size: 0.92rem !important;
+    line-height: 1.6 !important;
+}
+
+
+/* ACTION BUTTONS */
+
+.hero-actions {
+    margin-top: 24px !important;
+    gap: 12px !important;
+}
+
+
+/* RIGHT IMAGE CONTAINER */
+
+.hero-media {
+    min-height: 300px !important;
+    height: 330px !important;
+    max-height: 330px !important;
+}
+
+
+/* HERO IMAGE */
+
+.hero-media-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .hero-panel {
+        min-height: auto !important;
+        padding: 34px 38px !important;
+        gap: 32px !important;
+    }
+
+    .hero-copy h2 {
+        font-size: clamp(3rem, 6vw, 4rem) !important;
+    }
+
+    .hero-media {
+        min-height: 300px !important;
+        height: 300px !important;
+        max-height: 300px !important;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+    .hero-panel {
+        min-height: auto !important;
+        padding: 28px 22px !important;
+        gap: 26px !important;
+    }
+
+    .hero-copy h2 {
+        font-size: clamp(2.7rem, 12vw, 3.7rem) !important;
+    }
+
+    .hero-copy p {
+        margin-top: 18px !important;
+        font-size: 0.88rem !important;
+        line-height: 1.55 !important;
+    }
+
+    .hero-actions {
+        margin-top: 22px !important;
+    }
+
+    .hero-media {
+        min-height: 260px !important;
+        height: 260px !important;
+        max-height: 260px !important;
+    }
+
+}
+
+</style>
 
 {% endblock %}

@@ -1,16 +1,516 @@
 {% extends "base.html" %}
-{% block title %}Attendance | AttendAI Vision{% endblock %}
+
+{% block title %}
+Attendance | AttendAI Vision
+{% endblock %}
+
 {% block content %}
-<section class="registration-header"><div><span class="eyebrow">ATTENDANCE MANAGEMENT</span><h2>Attendance Records</h2>
-<p>Attendance is marked once per student per day.</p></div><div class="registration-status"><span class="status-dot"></span>{{ attendance_count }} Records</div></section>
-<section class="panel attendance-records-panel">
-<div class="panel-header"><div><span class="eyebrow">VERIFIED LOG</span><h3>Attendance History</h3></div>
-<a href="/live-attendance" class="primary-button">Open Live Attendance →</a></div>
-{% if attendance_records %}
-<div class="attendance-table-wrapper"><table class="attendance-table"><thead><tr><th>Student</th><th>Roll Number</th><th>Date</th><th>Time</th><th>Status</th></tr></thead>
-<tbody id="attendance-table-body">{% for record in attendance_records %}
-<tr data-attendance-date="{{ record.date }}"><td>{{ record.name }}</td><td>{{ record.roll_no }}</td><td>{{ record.date }}</td><td>{{ record.time }}</td><td>{{ record.status }}</td></tr>
-{% endfor %}</tbody></table></div>
-{% else %}<div class="attendance-empty-state"><h3>No attendance records</h3></div>{% endif %}
+
+<section class="registration-header">
+
+    <div>
+        <span class="eyebrow">
+            ATTENDANCE MANAGEMENT
+        </span>
+
+        <h2>
+            Attendance Records
+        </h2>
+
+        <p>
+            View student attendance records by selected date.
+        </p>
+    </div>
+
+    <div class="registration-status">
+        <span class="status-dot"></span>
+        {{ attendance_count }} Records
+    </div>
+
 </section>
+
+
+<section class="panel attendance-records-panel">
+
+    <div class="panel-header">
+
+        <div>
+            <span class="eyebrow">
+                ATTENDANCE LOG
+            </span>
+
+            <h3>
+                Attendance History
+            </h3>
+        </div>
+
+
+        <div class="attendance-header-actions">
+
+            <!-- DATE PICKER -->
+            <div class="attendance-date-control">
+
+                <label for="attendance-date-filter">
+                    Select Date
+                </label>
+
+                <input
+                    type="date"
+                    id="attendance-date-filter"
+                    aria-label="Select attendance date"
+                >
+
+            </div>
+
+
+            <!-- CLEAR DATE -->
+            <button
+                type="button"
+                class="attendance-all-dates-button"
+                id="show-all-dates-button"
+            >
+                All Dates
+            </button>
+
+
+            <!-- LIVE ATTENDANCE -->
+            <a
+                href="/live-attendance"
+                class="primary-button"
+            >
+                Open Live Attendance
+
+                <svg
+                    class="button-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M5 12h14"></path>
+                    <path d="m13 6 6 6-6 6"></path>
+                </svg>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if attendance_records %}
+
+    <!-- FILTER RESULT INFO -->
+    <div
+        class="attendance-filter-info"
+        id="attendance-filter-info"
+        hidden
+    >
+        <span class="status-dot"></span>
+
+        <span id="attendance-filter-message">
+            Showing selected date
+        </span>
+    </div>
+
+
+    <div class="attendance-table-wrapper">
+
+        <table class="attendance-table">
+
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Roll Number</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="attendance-table-body">
+
+                {% for record in attendance_records %}
+
+                <tr
+                    data-attendance-date="{{ record.date }}"
+                    data-attendance-time="{{ record.time }}"
+                >
+                    <td>
+                        {{ record.name }}
+                    </td>
+
+                    <td>
+                        {{ record.roll_no }}
+                    </td>
+
+                    <td>
+                        {{ record.date }}
+                    </td>
+
+                    <td>
+                        {{ record.time }}
+                    </td>
+
+                    <td>
+                        {{ record.status }}
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- NO RECORDS FOR SELECTED DATE -->
+    <div
+        class="attendance-date-empty"
+        id="attendance-date-empty"
+        hidden
+    >
+        <strong>
+            No attendance records for this date
+        </strong>
+
+        <p>
+            Choose another date or select All Dates.
+        </p>
+    </div>
+
+
+    {% else %}
+
+    <div class="attendance-empty-state">
+        <h3>
+            No attendance records
+        </h3>
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<style>
+/* =========================================================
+   HEADER ACTIONS
+   ========================================================= */
+
+.attendance-header-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+
+/* =========================================================
+   DATE PICKER
+   ========================================================= */
+
+.attendance-date-control {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.attendance-date-control label {
+    color: #31536d;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.attendance-date-control input[type="date"] {
+    min-width: 170px;
+    height: 44px;
+
+    padding: 0 12px;
+
+    border: 1px solid #bcd4e6;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #0b2239;
+
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.attendance-date-control input[type="date"]:hover {
+    border-color: #7faed2;
+}
+
+.attendance-date-control input[type="date"]:focus {
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================================================
+   ALL DATES BUTTON
+   ========================================================= */
+
+.attendance-all-dates-button {
+    height: 44px;
+
+    padding: 0 16px;
+
+    border: 1px solid #bcd4e6;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #174a70;
+
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.attendance-all-dates-button:hover {
+    border-color: #2563eb;
+    background: #eef6ff;
+}
+
+
+/* =========================================================
+   FILTER INFORMATION
+   ========================================================= */
+
+.attendance-filter-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin: 14px 0;
+
+    padding: 10px 13px;
+
+    border: 1px solid #c7ddf3;
+    border-radius: 9px;
+
+    background: #f0f7ff;
+    color: #174a70;
+
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.attendance-filter-info[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================================
+   SELECTED DATE EMPTY STATE
+   ========================================================= */
+
+.attendance-date-empty {
+    padding: 38px 20px;
+    text-align: center;
+}
+
+.attendance-date-empty[hidden] {
+    display: none !important;
+}
+
+.attendance-date-empty strong {
+    display: block;
+    color: #0b2239;
+    font-size: 1rem;
+}
+
+.attendance-date-empty p {
+    margin: 7px 0 0;
+    color: #4b6a80;
+    font-size: 0.82rem;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .attendance-header-actions {
+        width: 100%;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .attendance-date-control {
+        width: 100%;
+    }
+
+    .attendance-date-control input[type="date"] {
+        width: 100%;
+    }
+
+    .attendance-all-dates-button {
+        width: 100%;
+    }
+
+    .attendance-header-actions .primary-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+</style>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const dateInput =
+        document.getElementById("attendance-date-filter");
+
+    const allDatesButton =
+        document.getElementById("show-all-dates-button");
+
+    const tableBody =
+        document.getElementById("attendance-table-body");
+
+    const tableWrapper =
+        document.querySelector(".attendance-table-wrapper");
+
+    const filterInfo =
+        document.getElementById("attendance-filter-info");
+
+    const filterMessage =
+        document.getElementById("attendance-filter-message");
+
+    const dateEmpty =
+        document.getElementById("attendance-date-empty");
+
+
+    if (!dateInput || !tableBody) {
+        return;
+    }
+
+
+    const rows =
+        Array.from(
+            tableBody.querySelectorAll("tr")
+        );
+
+
+    function formatDateForDisplay(dateValue) {
+
+        if (!dateValue) {
+            return "";
+        }
+
+        const parts =
+            dateValue.split("-");
+
+        if (parts.length !== 3) {
+            return dateValue;
+        }
+
+        return (
+            parts[2] + "-" +
+            parts[1] + "-" +
+            parts[0]
+        );
+    }
+
+
+    function filterAttendanceByDate() {
+
+        const selectedDate =
+            dateInput.value;
+
+        let visibleCount = 0;
+
+
+        rows.forEach(function (row) {
+
+            const recordDate =
+                row.dataset.attendanceDate || "";
+
+
+            const shouldShow =
+                !selectedDate ||
+                recordDate === selectedDate;
+
+
+            row.hidden = !shouldShow;
+
+
+            if (shouldShow) {
+                visibleCount++;
+            }
+
+        });
+
+
+        if (selectedDate) {
+
+            filterInfo.hidden = false;
+
+            filterMessage.textContent =
+                "Showing " +
+                visibleCount +
+                " record" +
+                (visibleCount === 1 ? "" : "s") +
+                " for " +
+                formatDateForDisplay(selectedDate);
+
+        } else {
+
+            filterInfo.hidden = true;
+
+        }
+
+
+        if (visibleCount === 0) {
+
+            tableWrapper.hidden = true;
+            dateEmpty.hidden = false;
+
+        } else {
+
+            tableWrapper.hidden = false;
+            dateEmpty.hidden = true;
+
+        }
+    }
+
+
+    dateInput.addEventListener(
+        "change",
+        filterAttendanceByDate
+    );
+
+
+    allDatesButton.addEventListener(
+        "click",
+        function () {
+
+            dateInput.value = "";
+
+            filterAttendanceByDate();
+
+        }
+    );
+
+});
+</script>
+
 {% endblock %}

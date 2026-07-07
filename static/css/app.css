@@ -4345,3 +4345,2162 @@ h1, h2, h3,
     }
 }
 
+
+/* ==========================================================================
+   AttendAI Vision — Navy Cyan Professional Design System
+   Visual-only override. Existing routes, IDs, JS hooks and backend flow remain intact.
+   ========================================================================== */
+
+:root {
+    --navy-950: #071522;
+    --navy-900: #0B1F33;
+    --navy-850: #0F2A42;
+    --navy-800: #123B5D;
+    --navy-700: #185178;
+    --cyan-600: #009BB8;
+    --cyan-500: #00B8D9;
+    --cyan-400: #35CBE4;
+    --cyan-100: #DDF8FC;
+    --cyan-50: #F0FCFE;
+
+    --bg: #F4F8FB;
+    --surface: #FFFFFF;
+    --surface-2: #F8FBFD;
+    --surface-3: #EDF4F8;
+    --border: #D9E5EC;
+    --border-strong: #C5D6E0;
+
+    --text: #102A43;
+    --text-2: #334E68;
+    --muted: #627D98;
+    --muted-2: #829AB1;
+
+    --success: #16866F;
+    --success-soft: #E7F7F2;
+    --warning: #B7791F;
+    --warning-soft: #FFF7E6;
+    --danger: #C2414B;
+    --danger-soft: #FDECEF;
+
+    --shadow-xs: 0 1px 2px rgba(7, 21, 34, 0.04);
+    --shadow-sm: 0 4px 14px rgba(11, 31, 51, 0.07);
+    --shadow-md: 0 12px 30px rgba(11, 31, 51, 0.10);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --sidebar-width: 264px;
+    --topbar-height: 84px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--bg);
+}
+
+body {
+    margin: 0;
+    background:
+        radial-gradient(circle at 82% -10%, rgba(0, 184, 217, 0.07), transparent 28rem),
+        var(--bg);
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+}
+
+.app-shell {
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-900) 58%, #0D2941 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 8px 0 28px rgba(7, 21, 34, 0.10);
+}
+
+.brand {
+    min-height: 92px;
+    padding: 20px 20px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    color: var(--navy-950);
+    background: linear-gradient(145deg, #72DCEC, var(--cyan-500));
+    box-shadow: 0 8px 22px rgba(0, 184, 217, 0.20);
+}
+
+.brand-mark svg,
+.nav-icon svg,
+.menu-button svg,
+.metric-symbol svg,
+.button-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.brand-mark svg {
+    width: 24px;
+    height: 24px;
+}
+
+.brand-copy strong {
+    color: #FFFFFF;
+    font-size: 0.98rem;
+    letter-spacing: -0.02em;
+}
+
+.brand-copy span {
+    color: #91A9BC;
+    font-size: 0.72rem;
+    margin-top: 3px;
+}
+
+.nav-section-label {
+    color: #6F8BA0;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 22px 22px 9px;
+}
+
+.sidebar-nav,
+.sidebar-bottom {
+    gap: 5px;
+}
+
+.nav-item {
+    min-height: 44px;
+    margin: 0 10px;
+    padding: 0 12px;
+    border-radius: 9px;
+    color: #A9BDCC;
+    font-size: 0.88rem;
+    font-weight: 550;
+    transition: background-color .18s ease, color .18s ease, transform .18s ease;
+}
+
+.nav-item:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.065);
+    transform: translateX(2px);
+}
+
+.nav-item.active {
+    color: #FFFFFF;
+    background: linear-gradient(90deg, rgba(0, 184, 217, 0.22), rgba(0, 184, 217, 0.08));
+    box-shadow: inset 3px 0 0 var(--cyan-500);
+}
+
+.nav-icon {
+    width: 21px;
+    height: 21px;
+    color: #7FA3B9;
+}
+
+.nav-item.active .nav-icon {
+    color: var(--cyan-400);
+}
+
+.nav-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.sidebar-credit {
+    margin: 16px 14px 18px;
+    padding: 13px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.sidebar-credit span {
+    color: #7794A9;
+}
+
+.sidebar-credit strong {
+    color: #DCEAF2;
+}
+
+/* Main shell and topbar */
+.main-content {
+    margin-left: var(--sidebar-width);
+    min-width: 0;
+    background: transparent;
+}
+
+.topbar {
+    min-height: var(--topbar-height);
+    padding: 14px clamp(22px, 3vw, 42px);
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-xs);
+    backdrop-filter: blur(14px);
+}
+
+.topbar-left h1 {
+    margin: 0;
+    color: var(--navy-900);
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+}
+
+.topbar-left p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.menu-button {
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 9px;
+}
+
+.menu-button:hover {
+    color: var(--navy-900);
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+}
+
+.live-clock {
+    color: var(--text-2);
+}
+
+.live-clock small {
+    color: var(--muted);
+}
+
+.system-pill {
+    color: #126B5A;
+    background: var(--success-soft);
+    border: 1px solid #BCE8DC;
+    border-radius: 999px;
+}
+
+.status-dot {
+    background: var(--success);
+    box-shadow: 0 0 0 4px rgba(22, 134, 111, 0.10);
+}
+
+.profile-chip {
+    border-left: 1px solid var(--border);
+}
+
+.profile-avatar {
+    background: var(--navy-900);
+    color: #FFFFFF;
+    border: 2px solid var(--cyan-100);
+}
+
+.profile-chip strong {
+    color: var(--text);
+}
+
+.profile-chip small {
+    color: var(--muted);
+}
+
+/* Page spacing */
+.page-content {
+    width: min(100%, 1500px);
+    margin: 0 auto;
+    padding: clamp(24px, 3vw, 42px);
+}
+
+.eyebrow {
+    color: var(--cyan-600);
+    font-size: 0.69rem;
+    font-weight: 750;
+    letter-spacing: 0.13em;
+}
+
+/* Buttons */
+.primary-button,
+.secondary-button,
+.text-button {
+    text-decoration: none;
+}
+
+.primary-button {
+    min-height: 44px;
+    padding: 0 17px;
+    border: 1px solid var(--navy-900);
+    border-radius: 9px;
+    color: #FFFFFF;
+    background: var(--navy-900);
+    box-shadow: 0 5px 14px rgba(11, 31, 51, 0.12);
+    font-weight: 650;
+    transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
+.primary-button:hover {
+    transform: translateY(-1px);
+    background: var(--navy-800);
+    border-color: var(--navy-800);
+    box-shadow: 0 8px 20px rgba(11, 31, 51, 0.16);
+}
+
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.nav-item:focus-visible,
+.text-button:focus-visible {
+    outline: 3px solid rgba(0, 184, 217, 0.24);
+    outline-offset: 2px;
+}
+
+.secondary-button {
+    min-height: 44px;
+    padding: 0 17px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    color: var(--text-2);
+    background: var(--surface);
+    font-weight: 650;
+}
+
+.secondary-button:hover {
+    color: var(--navy-900);
+    border-color: #9FB8C8;
+    background: var(--surface-2);
+}
+
+.button-icon {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+}
+
+/* Hero */
+.hero-panel {
+    min-height: 350px;
+    border: 1px solid #173C59;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: linear-gradient(120deg, var(--navy-950) 0%, var(--navy-900) 48%, #0E3856 100%);
+    box-shadow: var(--shadow-md);
+}
+
+.hero-copy {
+    position: relative;
+    z-index: 2;
+    padding: clamp(34px, 5vw, 64px);
+}
+
+.hero-copy .eyebrow {
+    color: #64D5E8;
+}
+
+.hero-copy h2 {
+    margin: 10px 0 14px;
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: clamp(2.35rem, 5vw, 4.7rem);
+    font-weight: 750;
+    line-height: 0.98;
+    letter-spacing: -0.055em;
+}
+
+.hero-copy h2 span {
+    color: var(--cyan-400);
+}
+
+.hero-copy p {
+    max-width: 670px;
+    color: #B9CEDB;
+    font-size: 0.98rem;
+    line-height: 1.75;
+}
+
+.hero-actions {
+    gap: 11px;
+    margin-top: 26px;
+}
+
+.hero-actions .primary-button:first-child {
+    color: var(--navy-950);
+    background: var(--cyan-400);
+    border-color: var(--cyan-400);
+}
+
+.hero-actions .primary-button:first-child:hover {
+    background: #6DDCEB;
+    border-color: #6DDCEB;
+}
+
+.hero-actions .primary-button + .primary-button {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: none;
+}
+
+.hero-actions .primary-button + .primary-button:hover {
+    background: rgba(255, 255, 255, 0.11);
+}
+
+.hero-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, var(--navy-900) 0%, rgba(11,31,51,.72) 20%, rgba(11,31,51,.10) 65%),
+        linear-gradient(0deg, rgba(7,21,34,.20), rgba(7,21,34,.05));
+}
+
+.hero-media-image {
+    filter: saturate(.82) contrast(1.03);
+}
+
+/* Metrics */
+.metrics-grid {
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.metric-card {
+    min-height: 150px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    border-color: #BED2DE;
+    box-shadow: 0 10px 24px rgba(11, 31, 51, 0.09);
+}
+
+.metric-label {
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 650;
+}
+
+.metric-symbol {
+    width: 35px;
+    height: 35px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    color: var(--cyan-600);
+    background: var(--cyan-50);
+    border: 1px solid #CBEFF5;
+}
+
+.metric-symbol svg {
+    width: 18px;
+    height: 18px;
+}
+
+.metric-value {
+    color: var(--navy-900);
+    font-size: 2rem;
+    letter-spacing: -0.045em;
+}
+
+.metric-text {
+    font-size: 1.45rem;
+}
+
+.online-text {
+    color: var(--success);
+}
+
+.metric-note {
+    color: var(--muted);
+    font-size: 0.76rem;
+}
+
+/* Panels */
+.panel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.panel-header {
+    border-bottom-color: var(--border);
+}
+
+.panel-header h3 {
+    color: var(--navy-900);
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.activity-panel {
+    margin-top: 18px;
+}
+
+.activity-record-count {
+    color: var(--muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+}
+
+.text-button {
+    color: var(--cyan-600);
+    font-weight: 700;
+}
+
+.text-button:hover {
+    color: var(--navy-800);
+}
+
+.recent-activity-row {
+    border-color: var(--border);
+}
+
+.recent-activity-row:hover {
+    background: var(--surface-2);
+}
+
+.recent-activity-avatar,
+.capture-student-avatar {
+    color: var(--navy-900);
+    background: var(--cyan-100);
+    border: 1px solid #BFEAF1;
+}
+
+.recent-activity-identity strong,
+.recent-activity-meta strong {
+    color: var(--text);
+}
+
+.recent-activity-identity span,
+.recent-activity-label {
+    color: var(--muted);
+}
+
+.attendance-present-badge {
+    color: #126B5A;
+    background: var(--success-soft);
+    border-color: #BCE8DC;
+}
+
+/* Registration and capture */
+.registration-header h2 {
+    color: var(--navy-900);
+    font-family: inherit;
+    font-weight: 750;
+    letter-spacing: -0.04em;
+}
+
+.registration-header p {
+    color: var(--muted);
+}
+
+.registration-status,
+.health-status {
+    color: #126B5A;
+    background: var(--success-soft);
+    border-color: #BCE8DC;
+}
+
+.capture-grid {
+    gap: 18px;
+}
+
+.capture-camera-panel,
+.capture-session-panel {
+    overflow: hidden;
+}
+
+.camera-stage {
+    background:
+        radial-gradient(circle at 50% 45%, rgba(0, 184, 217, 0.08), transparent 35%),
+        var(--navy-950);
+    border: 1px solid #173C59;
+    border-radius: 11px;
+}
+
+.face-guide-frame {
+    border-color: rgba(53, 203, 228, 0.88);
+    box-shadow:
+        0 0 0 9999px rgba(7, 21, 34, 0.24),
+        0 0 24px rgba(0, 184, 217, 0.12);
+}
+
+.capture-status {
+    color: #DCEAF2;
+    background: rgba(7, 21, 34, 0.78);
+    border-color: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(8px);
+}
+
+.capture-status.ready,
+.capture-status.registered {
+    color: #DDF9F1;
+    background: rgba(16, 100, 82, 0.88);
+}
+
+.capture-status.warning,
+.capture-status.finalizing {
+    color: #FFF3D6;
+    background: rgba(128, 82, 18, 0.90);
+}
+
+.capture-status.error,
+.capture-status.rejected {
+    color: #FFE8EA;
+    background: rgba(137, 43, 53, 0.90);
+}
+
+.camera-placeholder {
+    color: #A9BDCC;
+}
+
+.camera-placeholder strong {
+    color: #FFFFFF;
+}
+
+.capture-detail-row {
+    border-bottom-color: var(--border);
+}
+
+.capture-detail-row span {
+    color: var(--muted);
+}
+
+.capture-detail-row strong {
+    color: var(--text);
+}
+
+.capture-progress-track {
+    background: #E6EFF4;
+}
+
+.capture-progress-fill {
+    background: linear-gradient(90deg, var(--cyan-600), var(--cyan-400));
+    box-shadow: 0 0 12px rgba(0, 184, 217, 0.20);
+}
+
+.capture-instruction {
+    color: var(--text-2);
+    background: var(--cyan-50);
+    border: 1px solid #CBEFF5;
+    border-left: 3px solid var(--cyan-500);
+}
+
+/* Inputs, tables and generic management surfaces */
+input,
+select,
+textarea {
+    color: var(--text);
+    background: var(--surface);
+    border-color: var(--border-strong);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--cyan-600);
+    box-shadow: 0 0 0 3px rgba(0, 184, 217, 0.12);
+}
+
+table {
+    color: var(--text-2);
+}
+
+th {
+    color: var(--muted);
+    background: var(--surface-2);
+    border-color: var(--border);
+}
+
+td {
+    border-color: var(--border);
+}
+
+tbody tr:hover {
+    background: #F8FBFD;
+}
+
+/* Toasts */
+.toast {
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+}
+
+.toast-success {
+    border-left: 4px solid var(--success);
+}
+
+.toast-warning {
+    border-left: 4px solid var(--warning);
+}
+
+.toast-error {
+    border-left: 4px solid var(--danger);
+}
+
+.toast-info {
+    border-left: 4px solid var(--cyan-600);
+}
+
+/* Footer */
+.site-footer {
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.55);
+}
+
+.site-footer strong {
+    color: var(--text-2);
+}
+
+/* Responsive refinements */
+@media (max-width: 1100px) {
+    .hero-panel {
+        min-height: 320px;
+    }
+
+    .hero-media {
+        opacity: .52;
+    }
+}
+
+@media (max-width: 900px) {
+    .main-content {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        box-shadow: 18px 0 42px rgba(7, 21, 34, 0.24);
+    }
+
+    .page-content {
+        padding: 22px;
+    }
+
+    .topbar {
+        padding-inline: 20px;
+    }
+}
+
+@media (max-width: 640px) {
+    .page-content {
+        padding: 16px;
+    }
+
+    .hero-panel {
+        min-height: auto;
+    }
+
+    .hero-copy {
+        padding: 28px 22px;
+    }
+
+    .hero-copy h2 {
+        font-size: 2.45rem;
+    }
+
+    .hero-actions {
+        align-items: stretch;
+    }
+
+    .hero-actions .primary-button {
+        justify-content: center;
+    }
+
+    .metric-card {
+        min-height: 132px;
+    }
+
+    .topbar-right .live-clock,
+    .topbar-right .system-pill {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
+
+/* ==========================================================================
+   AttendAI Vision — Navy Cyan Complete Page Coverage
+   Covers Register, Live Attendance, Students, Attendance, Analytics, Settings.
+   ========================================================================== */
+
+/* Shared page headers */
+.registration-header {
+    margin-bottom: 20px;
+    padding: 2px 0;
+}
+
+.registration-header h2 {
+    margin: 7px 0 8px;
+    color: var(--navy-900);
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
+    line-height: 1.12;
+}
+
+.registration-header p {
+    max-width: 720px;
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.registration-status,
+.live-badge {
+    min-height: 36px;
+    padding: 0 13px;
+    border-radius: 999px;
+    color: #126B5A;
+    background: var(--success-soft);
+    border: 1px solid #BCE8DC;
+    font-size: .76rem;
+    font-weight: 700;
+}
+
+/* Register page */
+.registration-grid {
+    gap: 18px;
+}
+
+.registration-form-panel,
+.enrollment-guide-panel {
+    overflow: hidden;
+}
+
+.registration-form {
+    padding: 24px;
+}
+
+.form-group label,
+.settings-field label {
+    color: var(--text-2);
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.form-group input,
+.settings-field input {
+    min-height: 45px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.form-group input:hover,
+.settings-field input:hover {
+    border-color: #AFC5D2;
+}
+
+.form-group input:focus,
+.settings-field input:focus {
+    outline: none;
+    border-color: var(--cyan-600);
+    box-shadow: 0 0 0 3px rgba(0, 184, 217, .12);
+}
+
+.form-group small {
+    color: var(--muted);
+}
+
+.form-actions {
+    border-top-color: var(--border);
+}
+
+.enrollment-steps {
+    padding: 24px;
+}
+
+.enrollment-step {
+    border-color: var(--border);
+}
+
+.enrollment-step::before {
+    background: var(--border);
+}
+
+.enrollment-step.active {
+    background: var(--cyan-50);
+    border-color: #CBEFF5;
+}
+
+.step-number {
+    color: var(--muted);
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+}
+
+.enrollment-step.active .step-number {
+    color: var(--navy-950);
+    background: var(--cyan-400);
+    border-color: var(--cyan-400);
+}
+
+.enrollment-step strong {
+    color: var(--text);
+}
+
+.enrollment-step p {
+    color: var(--muted);
+}
+
+/* Live Attendance */
+#attendance-camera-status,
+#camera-status {
+    border-radius: 999px;
+}
+
+#attendance-student-avatar {
+    background: var(--cyan-100);
+    color: var(--navy-900);
+}
+
+#attendance-recognition-result,
+#attendance-confidence,
+#attendance-liveness,
+#attendance-mark-result {
+    color: var(--navy-900);
+}
+
+/* Students */
+.students-panel,
+.attendance-records-panel,
+.analytics-student-panel,
+.settings-save-panel {
+    overflow: hidden;
+}
+
+.students-table-wrapper,
+.attendance-table-wrapper {
+    scrollbar-color: #B9CCD8 transparent;
+}
+
+.students-table,
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.students-table th,
+.attendance-table th {
+    padding: 13px 16px;
+    color: var(--muted);
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    font-size: .69rem;
+    font-weight: 750;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+}
+
+.students-table td,
+.attendance-table td {
+    padding: 15px 16px;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--border);
+}
+
+.students-table tbody tr,
+.attendance-table tbody tr {
+    transition: background-color .16s ease;
+}
+
+.students-table tbody tr:hover,
+.attendance-table tbody tr:hover {
+    background: #F8FBFD;
+}
+
+.student-table-avatar,
+.attendance-student-avatar {
+    color: var(--navy-900);
+    background: var(--cyan-100);
+    border: 1px solid #BFEAF1;
+}
+
+.student-table-profile strong,
+.attendance-student-profile strong,
+.student-roll-number,
+.attendance-roll-number {
+    color: var(--text);
+}
+
+.student-table-profile span,
+.attendance-student-profile span {
+    color: var(--muted);
+}
+
+.sample-count-badge,
+.settings-value-badge {
+    color: var(--navy-800);
+    background: var(--cyan-50);
+    border: 1px solid #CBEFF5;
+    border-radius: 999px;
+}
+
+.student-status-active {
+    color: #126B5A;
+    background: var(--success-soft);
+    border-color: #BCE8DC;
+}
+
+.student-status-inactive {
+    color: #6B7280;
+    background: #F1F5F7;
+    border-color: #D7E1E7;
+}
+
+.student-actions {
+    gap: 6px;
+}
+
+.student-action-button {
+    min-height: 32px;
+    padding: 0 10px;
+    border-radius: 7px;
+    font-size: .72rem;
+    font-weight: 700;
+    box-shadow: none;
+}
+
+.student-action-edit {
+    color: var(--navy-800);
+    background: var(--cyan-50);
+    border-color: #CBEFF5;
+}
+
+.student-action-edit:hover {
+    background: var(--cyan-100);
+}
+
+.student-action-activate {
+    color: #126B5A;
+    background: var(--success-soft);
+    border-color: #BCE8DC;
+}
+
+.student-action-deactivate {
+    color: #9A651A;
+    background: var(--warning-soft);
+    border-color: #F2D59B;
+}
+
+.student-action-reenroll {
+    color: #24526D;
+    background: #EEF6FA;
+    border-color: #C9DEE9;
+}
+
+.student-action-delete {
+    color: var(--danger);
+    background: var(--danger-soft);
+    border-color: #F2C7CC;
+}
+
+.students-empty-state,
+.attendance-empty-state {
+    color: var(--muted);
+    background: var(--surface);
+}
+
+/* Attendance */
+.attendance-records-panel .panel-header {
+    background: linear-gradient(180deg, #FFFFFF, #FBFDFE);
+}
+
+#attendance-table-body td:last-child {
+    font-weight: 700;
+    color: var(--success);
+}
+
+/* Analytics */
+.attendance-summary-grid {
+    gap: 16px;
+}
+
+.attendance-summary-card {
+    min-height: 145px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.attendance-summary-card::after {
+    content: "";
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    right: -35px;
+    top: -35px;
+    border-radius: 50%;
+    background: rgba(0, 184, 217, .07);
+}
+
+.attendance-summary-card strong {
+    color: var(--navy-900);
+    font-size: 2rem;
+    letter-spacing: -.045em;
+}
+
+.attendance-summary-card p {
+    color: var(--muted);
+}
+
+.analytics-grid {
+    gap: 18px;
+}
+
+.analytics-chart-container {
+    padding: 22px;
+}
+
+.analytics-trend-panel,
+.analytics-insight-panel {
+    overflow: hidden;
+}
+
+.health-list {
+    background: var(--surface);
+}
+
+.health-row {
+    border-color: var(--border);
+}
+
+.health-row:hover {
+    background: var(--surface-2);
+}
+
+.health-row strong {
+    color: var(--text);
+}
+
+.health-row span {
+    color: var(--muted);
+}
+
+.health-status.ready {
+    color: #126B5A;
+    background: var(--success-soft);
+    border-color: #BCE8DC;
+}
+
+.analytics-student-panel {
+    margin-top: 18px;
+}
+
+/* Settings */
+.settings-grid {
+    gap: 18px;
+}
+
+.settings-panel {
+    overflow: hidden;
+}
+
+.settings-description {
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.settings-control {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.settings-control input[type="range"] {
+    accent-color: var(--cyan-600);
+}
+
+.settings-range-labels {
+    color: var(--muted);
+}
+
+.settings-hint {
+    color: var(--text-2);
+    background: var(--cyan-50);
+    border: 1px solid #CBEFF5;
+    border-radius: 8px;
+}
+
+.settings-toggle-row {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+}
+
+.settings-toggle-row:hover {
+    border-color: #B8CCD8;
+    background: #F5FAFC;
+}
+
+.settings-toggle-row strong {
+    color: var(--text);
+}
+
+.settings-toggle-row span {
+    color: var(--muted);
+}
+
+.settings-toggle {
+    background: #B8C8D2;
+}
+
+.settings-toggle-row input:checked + .settings-toggle {
+    background: var(--cyan-600);
+}
+
+.settings-toggle::after {
+    background: #FFFFFF;
+    box-shadow: 0 1px 4px rgba(7, 21, 34, .18);
+}
+
+.settings-save-panel {
+    margin-top: 18px;
+    padding: 24px;
+    border-color: #BFD7E3;
+    background:
+        linear-gradient(100deg, rgba(221,248,252,.55), rgba(255,255,255,.95) 48%),
+        var(--surface);
+}
+
+.settings-save-panel h3 {
+    color: var(--navy-900);
+}
+
+.settings-save-panel p {
+    color: var(--muted);
+}
+
+/* Empty states across all pages */
+.empty-state,
+.students-empty-state,
+.attendance-empty-state {
+    padding: clamp(32px, 5vw, 58px) 24px;
+    text-align: center;
+}
+
+.empty-state strong,
+.students-empty-state h3,
+.attendance-empty-state h3 {
+    color: var(--navy-900);
+}
+
+.empty-state p {
+    color: var(--muted);
+}
+
+.empty-visual {
+    border-color: #CBEFF5;
+    background: var(--cyan-50);
+}
+
+/* Consistent disabled states */
+.primary-button:disabled,
+.secondary-button:disabled,
+.student-action-button:disabled {
+    opacity: .52;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Better responsive behavior for data-heavy pages */
+@media (max-width: 1180px) {
+    .students-table-wrapper,
+    .attendance-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .students-table {
+        min-width: 980px;
+    }
+
+    .attendance-table {
+        min-width: 720px;
+    }
+}
+
+@media (max-width: 760px) {
+    .registration-header {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .registration-status {
+        align-self: flex-start;
+    }
+
+    .registration-form,
+    .enrollment-steps,
+    .analytics-chart-container {
+        padding: 18px;
+    }
+
+    .settings-save-panel {
+        padding: 20px;
+    }
+}
+
+
+/* ==========================================================================
+   Page accent correction — remove legacy brown/gold top borders
+   Use semantic Navy Cyan accents consistently on every page.
+   ========================================================================== */
+
+.registration-header,
+.students-panel,
+.attendance-records-panel,
+.analytics-trend-panel,
+.analytics-insight-panel,
+.analytics-student-panel,
+.settings-panel,
+.settings-save-panel,
+.registration-form-panel,
+.enrollment-guide-panel,
+.capture-camera-panel,
+.capture-session-panel,
+.activity-panel {
+    border-top-color: var(--border) !important;
+}
+
+/* Shared content panels: neutral professional border */
+.panel {
+    border-top: 1px solid var(--border) !important;
+}
+
+/* Overview / Dashboard */
+.hero-panel {
+    border-top: 3px solid var(--cyan-500) !important;
+}
+
+.metric-card {
+    border-top: 3px solid #78D8E8 !important;
+}
+
+.activity-panel {
+    border-top: 3px solid var(--cyan-500) !important;
+}
+
+/* Register Student / Capture */
+.registration-form-panel,
+.enrollment-guide-panel {
+    border-top: 3px solid var(--cyan-500) !important;
+}
+
+.capture-camera-panel {
+    border-top: 3px solid var(--cyan-500) !important;
+}
+
+.capture-session-panel {
+    border-top: 3px solid var(--navy-700) !important;
+}
+
+/* Students */
+.students-panel {
+    border-top: 3px solid #169BB5 !important;
+}
+
+/* Attendance */
+.attendance-records-panel {
+    border-top: 3px solid #16866F !important;
+}
+
+/* Analytics */
+.attendance-summary-card {
+    border-top: 3px solid #59C7DA !important;
+}
+
+.analytics-trend-panel {
+    border-top: 3px solid var(--cyan-500) !important;
+}
+
+.analytics-insight-panel,
+.analytics-student-panel {
+    border-top: 3px solid var(--navy-700) !important;
+}
+
+/* Settings */
+.settings-panel {
+    border-top: 3px solid #4BBFD3 !important;
+}
+
+.settings-save-panel {
+    border-top: 3px solid var(--cyan-600) !important;
+}
+
+/* Page header eyebrow: keep cyan, never legacy gold/brown */
+.registration-header .eyebrow,
+.panel-header .eyebrow,
+.hero-copy .eyebrow,
+.attendance-summary-card .eyebrow {
+    color: var(--cyan-600);
+}
+
+.hero-copy .eyebrow {
+    color: #64D5E8;
+}
+
+
+/* ==========================================================================
+   V3 — Unified Blue Page Accents
+   Requested: all page header accents/status elements use blue.
+   ========================================================================== */
+
+:root {
+    --page-blue: #2563EB;
+    --page-blue-dark: #1D4ED8;
+    --page-blue-soft: #EFF6FF;
+    --page-blue-border: #BFDBFE;
+}
+
+/* All page eyebrow labels */
+.registration-header .eyebrow,
+.panel-header .eyebrow,
+.attendance-summary-card .eyebrow,
+.activity-panel .eyebrow {
+    color: var(--page-blue) !important;
+}
+
+/* All page header cards / top accent lines */
+.registration-header {
+    border-top: 4px solid var(--page-blue) !important;
+    border-left: 1px solid var(--page-blue-border) !important;
+    border-right: 1px solid var(--page-blue-border) !important;
+    border-bottom: 1px solid var(--page-blue-border) !important;
+    background: #FFFFFF !important;
+}
+
+/* Header status pills on every page */
+.registration-status,
+.live-badge {
+    color: var(--page-blue-dark) !important;
+    background: var(--page-blue-soft) !important;
+    border-color: var(--page-blue-border) !important;
+}
+
+.registration-status .status-dot,
+.live-badge .status-dot {
+    background: var(--page-blue) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .10) !important;
+}
+
+/* All main page panels use blue top accents */
+.activity-panel,
+.registration-form-panel,
+.enrollment-guide-panel,
+.capture-camera-panel,
+.capture-session-panel,
+.students-panel,
+.attendance-records-panel,
+.analytics-trend-panel,
+.analytics-insight-panel,
+.analytics-student-panel,
+.settings-panel,
+.settings-save-panel {
+    border-top: 3px solid var(--page-blue) !important;
+}
+
+/* Dashboard metric and analytics summary accents */
+.metric-card,
+.attendance-summary-card {
+    border-top: 3px solid var(--page-blue) !important;
+}
+
+/* Blue badges where page-level state is shown */
+.settings-value-badge,
+.sample-count-badge {
+    color: var(--page-blue-dark) !important;
+    background: var(--page-blue-soft) !important;
+    border-color: var(--page-blue-border) !important;
+}
+
+/* Keep semantic success/error states unchanged inside operational data */
+
+
+/* ==========================================================================
+   V4 — Unified top navigation bar colour on every page
+   Replaces plain white with a subtle professional blue-tinted surface.
+   ========================================================================== */
+
+.topbar {
+    background:
+        linear-gradient(
+            100deg,
+            #F4F9FF 0%,
+            #EDF6FF 48%,
+            #E8F3FC 100%
+        ) !important;
+    border-bottom: 1px solid #C7DBEA !important;
+    box-shadow: 0 4px 16px rgba(11, 31, 51, 0.06) !important;
+    backdrop-filter: blur(14px);
+}
+
+.topbar-left h1 {
+    color: #0B1F33 !important;
+}
+
+.topbar-left p {
+    color: #58738C !important;
+}
+
+.menu-button {
+    color: #174A6B !important;
+    background: rgba(255, 255, 255, 0.78) !important;
+    border-color: #C5D9E7 !important;
+}
+
+.menu-button:hover {
+    color: #0B1F33 !important;
+    background: #FFFFFF !important;
+    border-color: #9EBFD2 !important;
+}
+
+.live-clock {
+    color: #173A55 !important;
+}
+
+.live-clock small {
+    color: #668198 !important;
+}
+
+.profile-chip {
+    border-left-color: #C7DBEA !important;
+}
+
+.profile-chip strong {
+    color: #102A43 !important;
+}
+
+.profile-chip small {
+    color: #627D98 !important;
+}
+
+/* Keep system state readable against the blue-tinted topbar */
+.topbar .system-pill {
+    color: #126B5A !important;
+    background: rgba(231, 247, 242, 0.92) !important;
+    border-color: #B7E2D7 !important;
+}
+
+
+/* ==========================================================================
+   V5 — Stronger Blue Topbar + Higher Contrast Text Across All Pages
+   ========================================================================== */
+
+:root {
+    --text: #0B2239;
+    --text-2: #24445F;
+    --muted: #48677F;
+    --muted-2: #668198;
+}
+
+/* More visibly blue top navigation surface */
+.topbar {
+    background:
+        linear-gradient(
+            105deg,
+            #DDEEFF 0%,
+            #D4E9FC 48%,
+            #CBE4F8 100%
+        ) !important;
+    border-bottom: 1px solid #A9CBE2 !important;
+    box-shadow: 0 5px 18px rgba(11, 31, 51, 0.09) !important;
+}
+
+.topbar-left h1 {
+    color: #081F35 !important;
+    font-weight: 750 !important;
+}
+
+.topbar-left p {
+    color: #355B78 !important;
+    font-weight: 520 !important;
+}
+
+.menu-button {
+    color: #123F60 !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+    border-color: #9FC4DD !important;
+}
+
+.live-clock {
+    color: #0F3552 !important;
+    font-weight: 700 !important;
+}
+
+.live-clock small {
+    color: #42657F !important;
+    font-weight: 520 !important;
+}
+
+.profile-chip strong {
+    color: #0B2239 !important;
+}
+
+.profile-chip small {
+    color: #3F617A !important;
+}
+
+/* Stronger readable text across all content pages */
+body {
+    color: #0B2239 !important;
+}
+
+.registration-header h2,
+.panel-header h3,
+.settings-save-panel h3,
+.empty-state strong,
+.students-empty-state h3,
+.attendance-empty-state h3 {
+    color: #081F35 !important;
+}
+
+.registration-header p,
+.hero-copy p,
+.settings-description,
+.settings-save-panel p,
+.empty-state p,
+.attendance-summary-card p {
+    color: #3F6078 !important;
+}
+
+.metric-label,
+.metric-note,
+.recent-activity-label,
+.form-group small,
+.settings-range-labels,
+.student-table-profile span,
+.attendance-student-profile span,
+.capture-detail-row span {
+    color: #48677F !important;
+}
+
+.metric-value,
+.metric-text,
+.capture-detail-row strong,
+.health-row strong,
+.student-table-profile strong,
+.attendance-student-profile strong,
+.student-roll-number,
+.attendance-roll-number {
+    color: #0B2239 !important;
+}
+
+.form-group label,
+.settings-field label {
+    color: #24445F !important;
+}
+
+.form-group input,
+.settings-field input,
+input,
+select,
+textarea {
+    color: #0B2239 !important;
+}
+
+.form-group input::placeholder,
+input::placeholder,
+textarea::placeholder {
+    color: #6B8498 !important;
+    opacity: 1 !important;
+}
+
+.students-table td,
+.attendance-table td {
+    color: #294A64 !important;
+}
+
+.students-table th,
+.attendance-table th {
+    color: #355B75 !important;
+}
+
+.recent-activity-identity strong,
+.recent-activity-meta strong {
+    color: #0B2239 !important;
+}
+
+.recent-activity-identity span {
+    color: #48677F !important;
+}
+
+.health-row span,
+.settings-toggle-row span {
+    color: #48677F !important;
+}
+
+/* Keep dark hero text intentionally light for contrast */
+.hero-copy p {
+    color: #C3D6E2 !important;
+}
+
+.hero-copy .eyebrow {
+    color: #6EDDF0 !important;
+}
+
+/* Sidebar text slightly stronger while retaining hierarchy */
+.nav-item {
+    color: #B8CAD7 !important;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: #FFFFFF !important;
+}
+
+.nav-section-label {
+    color: #87A3B7 !important;
+}
+
+.sidebar-credit span {
+    color: #91AABD !important;
+}
+
+.sidebar-credit strong {
+    color: #F0F7FB !important;
+}
+
+
+/* ==========================================================================
+   V6 — Deeper Blue Bars + Darker/Larger Typography
+   ========================================================================== */
+
+:root {
+    --text: #061A2E;
+    --text-2: #183A55;
+    --muted: #34566F;
+    --muted-2: #526F85;
+}
+
+/* Upper bar: slightly deeper, richer blue */
+.topbar {
+    background:
+        linear-gradient(
+            105deg,
+            #C9E4FB 0%,
+            #BFDDF7 48%,
+            #B4D6F2 100%
+        ) !important;
+    border-bottom: 1px solid #8DB9D8 !important;
+    box-shadow: 0 6px 20px rgba(7, 30, 50, 0.11) !important;
+}
+
+.topbar-left h1 {
+    color: #04192C !important;
+    font-size: clamp(1.42rem, 2vw, 1.72rem) !important;
+    font-weight: 800 !important;
+}
+
+.topbar-left p {
+    color: #234C69 !important;
+    font-size: .84rem !important;
+    font-weight: 600 !important;
+}
+
+.live-clock {
+    color: #082A45 !important;
+    font-size: .82rem !important;
+    font-weight: 800 !important;
+}
+
+.live-clock small {
+    color: #315875 !important;
+    font-size: .72rem !important;
+    font-weight: 600 !important;
+}
+
+.profile-chip strong {
+    color: #061A2E !important;
+    font-weight: 800 !important;
+}
+
+.profile-chip small {
+    color: #315875 !important;
+    font-weight: 600 !important;
+}
+
+/* Stronger global typography */
+body {
+    color: #061A2E !important;
+    font-size: 16px !important;
+}
+
+.registration-header h2 {
+    color: #04192C !important;
+    font-size: clamp(1.9rem, 3vw, 2.45rem) !important;
+    font-weight: 800 !important;
+}
+
+.panel-header h3,
+.settings-save-panel h3 {
+    color: #061A2E !important;
+    font-size: 1.18rem !important;
+    font-weight: 800 !important;
+}
+
+.registration-header p,
+.settings-description,
+.settings-save-panel p,
+.empty-state p,
+.attendance-summary-card p {
+    color: #294E69 !important;
+    font-size: .94rem !important;
+    font-weight: 520 !important;
+    line-height: 1.68 !important;
+}
+
+.eyebrow {
+    font-size: .74rem !important;
+    font-weight: 800 !important;
+}
+
+.metric-label {
+    color: #294E69 !important;
+    font-size: .81rem !important;
+    font-weight: 750 !important;
+}
+
+.metric-note {
+    color: #3A5E77 !important;
+    font-size: .8rem !important;
+    font-weight: 550 !important;
+}
+
+.metric-value,
+.metric-text {
+    color: #04192C !important;
+    font-weight: 800 !important;
+}
+
+.form-group label,
+.settings-field label {
+    color: #153B57 !important;
+    font-size: .83rem !important;
+    font-weight: 800 !important;
+}
+
+.form-group small {
+    color: #3A5E77 !important;
+    font-size: .78rem !important;
+    font-weight: 550 !important;
+}
+
+input,
+select,
+textarea {
+    color: #061A2E !important;
+    font-size: .94rem !important;
+    font-weight: 600 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #58758B !important;
+    font-weight: 500 !important;
+}
+
+.students-table th,
+.attendance-table th {
+    color: #234B67 !important;
+    font-size: .73rem !important;
+    font-weight: 800 !important;
+}
+
+.students-table td,
+.attendance-table td {
+    color: #173B56 !important;
+    font-size: .9rem !important;
+    font-weight: 540 !important;
+}
+
+.student-table-profile strong,
+.attendance-student-profile strong,
+.student-roll-number,
+.attendance-roll-number,
+.recent-activity-identity strong,
+.recent-activity-meta strong,
+.capture-detail-row strong,
+.health-row strong {
+    color: #061A2E !important;
+    font-weight: 750 !important;
+}
+
+.student-table-profile span,
+.attendance-student-profile span,
+.recent-activity-identity span,
+.recent-activity-label,
+.capture-detail-row span,
+.health-row span,
+.settings-toggle-row span {
+    color: #34566F !important;
+    font-size: .8rem !important;
+    font-weight: 550 !important;
+}
+
+/* Sidebar navigation stronger */
+.nav-item {
+    color: #C2D2DE !important;
+    font-size: .91rem !important;
+    font-weight: 650 !important;
+}
+
+.nav-section-label {
+    color: #93AFC2 !important;
+    font-size: .7rem !important;
+    font-weight: 800 !important;
+}
+
+/* Bottom developer bar: blue family matching upper bar */
+.sidebar-credit {
+    background:
+        linear-gradient(
+            105deg,
+            #C9E4FB 0%,
+            #BFDDF7 52%,
+            #B4D6F2 100%
+        ) !important;
+    border: 1px solid #8DB9D8 !important;
+    box-shadow: 0 6px 18px rgba(7, 30, 50, .14) !important;
+}
+
+.sidebar-credit span {
+    color: #315875 !important;
+    font-size: .72rem !important;
+    font-weight: 650 !important;
+}
+
+.sidebar-credit strong {
+    color: #061A2E !important;
+    font-size: .88rem !important;
+    font-weight: 800 !important;
+}
+
+/* Preserve dark hero inverse contrast */
+.hero-copy h2 {
+    color: #FFFFFF !important;
+}
+
+.hero-copy h2 span {
+    color: var(--cyan-400) !important;
+}
+
+.hero-copy p {
+    color: #C9DBE6 !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}
+/* =========================================================
+   FINAL DEVELOPER BOX — DARK + COMPACT
+   ========================================================= */
+
+.sidebar-credit {
+    margin: 14px 14px 16px !important;
+    padding: 10px 12px !important;
+
+    background: rgba(255, 255, 255, 0.035) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+
+    box-shadow: none !important;
+}
+
+.sidebar-credit span {
+    color: #91AABD !important;
+
+    font-size: 0.62rem !important;
+    line-height: 1.2 !important;
+    font-weight: 500 !important;
+}
+
+.sidebar-credit strong {
+    color: #F0F7FB !important;
+
+    font-size: 0.76rem !important;
+    line-height: 1.2 !important;
+    font-weight: 700 !important;
+}
+/* =========================================================
+   FINAL COMPACT PAGE HEADER TEXT
+   Applies to Register, Students, Attendance, Analytics,
+   Settings, Live Attendance and other shared page headers
+   ========================================================= */
+
+.registration-header .eyebrow {
+    font-size: 0.64rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0.09em !important;
+    margin-bottom: 4px !important;
+}
+
+.registration-header h2 {
+    font-size: clamp(1.35rem, 1.75vw, 1.70rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.02em !important;
+    margin: 0 !important;
+
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+}
+
+.registration-header p {
+    font-size: 0.78rem !important;
+    line-height: 1.35 !important;
+    margin-top: 5px !important;
+
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+}
+
+.registration-status,
+.live-badge {
+    font-size: 0.68rem !important;
+    line-height: 1.15 !important;
+    padding: 5px 10px !important;
+    min-height: 30px !important;
+}
+/* =========================================================
+   FINAL COMPACT PAGE HEADER TEXT
+   Applies to Register, Students, Attendance, Analytics,
+   Settings, Live Attendance and other shared page headers
+   ========================================================= */
+
+.registration-header .eyebrow {
+    font-size: 0.64rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0.09em !important;
+    margin-bottom: 4px !important;
+}
+
+.registration-header h2 {
+    font-size: clamp(1.35rem, 1.75vw, 1.70rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.02em !important;
+    margin: 0 !important;
+
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+}
+
+.registration-header p {
+    font-size: 0.78rem !important;
+    line-height: 1.35 !important;
+    margin-top: 5px !important;
+
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+}
+
+.registration-status,
+.live-badge {
+    font-size: 0.68rem !important;
+    line-height: 1.15 !important;
+    padding: 5px 10px !important;
+    min-height: 30px !important;
+}
+
+/* =========================================================
+   PAGE HEADER — CONSISTENT SPACING AND NO TEXT OVERFLOW
+   ========================================================= */
+
+.registration-header {
+    min-height: 118px;
+    height: auto;
+    padding: 20px 24px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    overflow: hidden;
+}
+
+.registration-header > div:first-child {
+    min-width: 0;
+    padding-left: 0;
+}
+
+.registration-header .eyebrow {
+    display: block;
+    margin: 0 0 5px 0;
+    line-height: 1.2;
+}
+
+.registration-header h2 {
+    margin: 0 0 6px 0;
+    line-height: 1.15;
+}
+
+.registration-header p {
+    margin: 0;
+    line-height: 1.45;
+    max-width: 760px;
+}
+
+.registration-header .registration-status {
+    flex: 0 0 auto;
+    align-self: center;
+    white-space: nowrap;
+}
+
+
+/* Responsive protection */
+
+@media (max-width: 768px) {
+    .registration-header {
+        min-height: auto;
+        padding: 18px 20px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .registration-header .registration-status {
+        align-self: flex-start;
+    }
+}
+

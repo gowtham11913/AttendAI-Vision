@@ -10,352 +10,524 @@ Settings | AttendAI Vision
 
     <div>
         <span class="eyebrow">
-            SYSTEM CONFIGURATION
+            SYSTEM PREFERENCES
         </span>
 
         <h2>
-            Runtime Settings
+            Settings
         </h2>
 
         <p>
-            Configure face recognition, liveness validation,
-            attendance behavior, and camera preferences.
+            Choose a recommended setup or personalize selected
+            attendance and verification preferences.
         </p>
     </div>
 
     <div class="registration-status">
         <span class="status-dot"></span>
-        Configuration Active
+        Settings Ready
     </div>
 
 </section>
 
 
-<form
-    id="settings-form"
-    class="settings-form"
->
+<form id="settings-form" class="settings-form">
 
-    <section class="settings-grid">
-
-        <article class="panel settings-panel">
-
-            <div class="panel-header">
-
-                <div>
-                    <span class="eyebrow">
-                        FACE RECOGNITION
-                    </span>
-
-                    <h3>
-                        Recognition Threshold
-                    </h3>
-                </div>
-
-                <span
-                    class="settings-value-badge"
-                    id="recognition-threshold-value"
-                >
-                    {{ "%.0f"|format(
-                        settings.recognition_confidence_threshold * 100
-                    ) }}%
-                </span>
-
+    <section class="panel settings-mode-panel">
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">CONFIGURATION MODE</span>
+                <h3>Choose your setup</h3>
             </div>
-
-
-            <p class="settings-description">
-                Minimum SVM prediction probability required
-                before an identity is accepted as a known student.
-            </p>
-
-
-            <div class="settings-control">
-
-                <input
-                    type="range"
-                    id="recognition-confidence-threshold"
-                    name="recognition_confidence_threshold"
-                    min="0.50"
-                    max="1.00"
-                    step="0.01"
-                    value="{{ settings.recognition_confidence_threshold }}"
-                >
-
-                <div class="settings-range-labels">
-                    <span>50%</span>
-                    <span>100%</span>
-                </div>
-
-            </div>
-
-
-            <div class="settings-hint">
-                Current recommended value: 90%
-            </div>
-
-        </article>
-        
-
-
-        <article class="panel settings-panel">
-
-            <div class="panel-header">
-
-                <div>
-                    <span class="eyebrow">
-                        IDENTITY VERIFICATION
-                    </span>
-
-                    <h3>
-                        ArcFace Verification Threshold
-                    </h3>
-                </div>
-
-                <span
-                    class="settings-value-badge"
-                    id="arcface-verification-threshold-value"
-                >
-                    {{ "%.0f"|format(
-                        settings.arcface_verification_threshold * 100
-                    ) }}%
-                </span>
-
-            </div>
-
-
-            <p class="settings-description">
-                Minimum cosine similarity required to confirm
-                that the SVM candidate matches the student's
-                stored ArcFace embeddings.
-            </p>
-
-
-            <div class="settings-control">
-
-                <input
-                    type="range"
-                    id="arcface-verification-threshold"
-                    name="arcface_verification_threshold"
-                    min="0.20"
-                    max="0.90"
-                    step="0.01"
-                    value="{{ settings.arcface_verification_threshold }}"
-                >
-
-                <div class="settings-range-labels">
-                    <span>20%</span>
-                    <span>90%</span>
-                </div>
-
-            </div>
-
-
-            <div class="settings-hint">
-                Current configured value:
-                {{ "%.0f"|format(
-                    settings.arcface_verification_threshold * 100
-                ) }}%
-            </div>
-
-        </article>
-
-        
-
-
-        <article class="panel settings-panel">
-
-            <div class="panel-header">
-
-                <div>
-                    <span class="eyebrow">
-                        ANTI-SPOOFING
-                    </span>
-
-                    <h3>
-                        Liveness Threshold
-                    </h3>
-                </div>
-
-                <span
-                    class="settings-value-badge"
-                    id="liveness-threshold-value"
-                >
-                    {{ "%.0f"|format(
-                        settings.liveness_score_threshold * 100
-                    ) }}%
-                </span>
-
-            </div>
-
-
-            <p class="settings-description">
-                Minimum passive anti-spoofing score required
-                before a detected face is treated as live.
-            </p>
-
-
-            <div class="settings-control">
-
-                <input
-                    type="range"
-                    id="liveness-score-threshold"
-                    name="liveness_score_threshold"
-                    min="0.30"
-                    max="1.00"
-                    step="0.01"
-                    value="{{ settings.liveness_score_threshold }}"
-                >
-
-                <div class="settings-range-labels">
-                    <span>30%</span>
-                    <span>100%</span>
-                </div>
-
-            </div>
-
-
-            <div class="settings-hint">
-                Current recommended value: 70%
-            </div>
-
-        </article>
-
-
-        <article class="panel settings-panel">
-
-            <div class="panel-header">
-
-                <div>
-                    <span class="eyebrow">
-                        ATTENDANCE POLICY
-                    </span>
-
-                    <h3>
-                        Daily Attendance
-                    </h3>
-                </div>
-
-            </div>
-
-
-            <p class="settings-description">
-                Control whether a student should have only
-                one attendance record per calendar day.
-            </p>
-
-
-            <label class="settings-toggle-row">
-
-                <div>
-                    <strong>
-                        Once per day
-                    </strong>
-
-                    <span>
-                        Prevent duplicate daily attendance entries
-                    </span>
-                </div>
-
-                <input
-                    type="checkbox"
-                    id="attendance-once-per-day"
-                    name="attendance_once_per_day"
-                    {% if settings.attendance_once_per_day %}
-                    checked
-                    {% endif %}
-                >
-
-                <span class="settings-toggle"></span>
-
-            </label>
-
-        </article>
-
-
-        <article class="panel settings-panel">
-
-            <div class="panel-header">
-
-                <div>
-                    <span class="eyebrow">
-                        CAMERA
-                    </span>
-
-                    <h3>
-                        Camera Device
-                    </h3>
-                </div>
-
-            </div>
-
-
-            <p class="settings-description">
-                Select the OpenCV camera index used by the
-                local desktop attendance pipeline.
-            </p>
-
-
-            <div class="settings-field">
-
-                <label for="camera-index">
-                    Camera Index
-                </label>
-
-                <input
-                    type="number"
-                    id="camera-index"
-                    name="camera_index"
-                    min="0"
-                    step="1"
-                    value="{{ settings.camera_index }}"
-                >
-
-            </div>
-
-
-            <div class="settings-hint">
-                Most built-in laptop cameras use index 0.
-            </div>
-
-        </article>
-
-    </section>
-
-
-    <section class="panel settings-save-panel">
-
-        <div>
-
-            <span class="eyebrow">
-                PERSISTENT CONFIGURATION
-            </span>
-
-            <h3>
-                Save Runtime Settings
-            </h3>
-
-            <p>
-                Threshold changes are persisted to
-                <strong>database/settings.json</strong>.
-                Recognition and liveness thresholds are applied
-                immediately to the running web pipeline.
-            </p>
-
+            <span class="settings-value-badge" id="settings-mode-badge">Recommended</span>
         </div>
 
+        <p class="settings-description">
+            Use the recommended setup for normal operation, or choose
+            Custom Mode to adjust selected preferences.
+        </p>
 
-        <button
-            type="submit"
-            class="primary-button"
-            id="save-settings-button"
-        >
-            Save Settings
-            <span>→</span>
-        </button>
+        <div class="settings-mode-grid">
+            <label class="settings-mode-card active" id="default-mode-card">
+                <input type="radio" name="settings_mode" value="default"
+                       id="settings-mode-default" checked>
+                <span class="settings-mode-radio"></span>
+                <span class="settings-mode-copy">
+                    <strong>Default Mode</strong>
+                    <span>Automatically uses the recommended configuration
+                    for reliable day-to-day attendance.</span>
+                </span>
+                <span class="settings-mode-tag">Recommended</span>
+            </label>
 
+            <label class="settings-mode-card" id="custom-mode-card">
+                <input type="radio" name="settings_mode" value="custom"
+                       id="settings-mode-custom">
+                <span class="settings-mode-radio"></span>
+                <span class="settings-mode-copy">
+                    <strong>Custom Mode</strong>
+                    <span>Adjust selected verification, protection,
+                    attendance, and camera preferences.</span>
+                </span>
+            </label>
+        </div>
     </section>
 
+    <section class="panel settings-default-panel" id="settings-default-panel">
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">RECOMMENDED SETUP</span>
+                <h3>Optimized configuration active</h3>
+            </div>
+            <span class="health-status ready">Ready</span>
+        </div>
+
+        <p class="settings-description">
+            AttendAI Vision will use the recommended operating preferences.
+            No technical configuration is required.
+        </p>
+
+        <div class="settings-friendly-summary">
+            <div class="settings-summary-row">
+                <div><strong>Identity Verification</strong>
+                <span>Reliable student matching</span></div>
+                <span class="settings-summary-value">Optimized</span>
+            </div>
+            <div class="settings-summary-row">
+                <div><strong>Liveness Protection</strong>
+                <span>Helps reject non-live face attempts</span></div>
+                <span class="settings-summary-value">Enabled</span>
+            </div>
+            <div class="settings-summary-row">
+                <div><strong>Duplicate Prevention</strong>
+                <span>Avoid repeated attendance on the same day</span></div>
+                <span class="settings-summary-value">Once per day</span>
+            </div>
+            <div class="settings-summary-row">
+                <div><strong>Camera Preference</strong>
+                <span>Uses the primary available camera</span></div>
+                <span class="settings-summary-value">Automatic</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="settings-custom-section" hidden>
+
+        <section class="panel settings-level-guide">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">CUSTOM MODE GUIDE</span>
+                    <h3>Choose simple protection levels</h3>
+                </div>
+            </div>
+
+            <p class="settings-description">
+                Select Low, Medium, or High for each preference.
+                Medium is recommended for normal classroom attendance.
+            </p>
+
+            <div class="settings-level-instructions">
+                <div class="settings-instruction-card level-low">
+                    <strong>Low</strong>
+                    <span>
+                        Easier and faster acceptance. Useful when lighting or camera
+                        quality is poor, but may reduce verification strictness.
+                    </span>
+                </div>
+
+                <div class="settings-instruction-card level-medium">
+                    <strong>Medium</strong>
+                    <span>
+                        Balanced reliability and convenience. Recommended for normal
+                        classrooms and everyday attendance.
+                    </span>
+                </div>
+
+                <div class="settings-instruction-card level-high">
+                    <strong>High</strong>
+                    <span>
+                        Stronger verification. May reject more uncertain attempts and
+                        can require better lighting, positioning, and image quality.
+                    </span>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="settings-grid">
+
+            <article class="panel settings-panel">
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">IDENTITY MATCHING</span>
+                        <h3>Recognition Strictness</h3>
+                    </div>
+                </div>
+
+                <p class="settings-description">
+                    Controls how confidently the system should recognize a student
+                    before continuing.
+                </p>
+
+                <div class="settings-field">
+                    <label for="recognition-level">Select Level</label>
+                    <select id="recognition-level" class="settings-level-select">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium — Recommended</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="settings-level-help" id="recognition-level-help"></div>
+
+                <input type="hidden"
+                       id="recognition-confidence-threshold"
+                       name="recognition_confidence_threshold"
+                       value="{{ settings.recognition_confidence_threshold }}">
+            </article>
+
+
+            <article class="panel settings-panel">
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">IDENTITY CONFIRMATION</span>
+                        <h3>Verification Strength</h3>
+                    </div>
+                </div>
+
+                <p class="settings-description">
+                    Controls how closely the detected face should match the
+                    enrolled student profile.
+                </p>
+
+                <div class="settings-field">
+                    <label for="verification-level">Select Level</label>
+                    <select id="verification-level" class="settings-level-select">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium — Recommended</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="settings-level-help" id="verification-level-help"></div>
+
+                <input type="hidden"
+                       id="arcface-verification-threshold"
+                       name="arcface_verification_threshold"
+                       value="{{ settings.arcface_verification_threshold }}">
+            </article>
+
+
+            <article class="panel settings-panel">
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">LIVE PERSON CHECK</span>
+                        <h3>Liveness Protection</h3>
+                    </div>
+                </div>
+
+                <p class="settings-description">
+                    Controls how strongly the system checks that a real,
+                    live person is present.
+                </p>
+
+                <div class="settings-field">
+                    <label for="liveness-level">Select Level</label>
+                    <select id="liveness-level" class="settings-level-select">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium — Recommended</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="settings-level-help" id="liveness-level-help"></div>
+
+                <input type="hidden"
+                       id="liveness-score-threshold"
+                       name="liveness_score_threshold"
+                       value="{{ settings.liveness_score_threshold }}">
+            </article>
+
+
+            <article class="panel settings-panel">
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">ATTENDANCE BEHAVIOR</span>
+                        <h3>Duplicate Prevention</h3>
+                    </div>
+                </div>
+
+                <p class="settings-description">
+                    Prevent repeated attendance entries for the same student
+                    on the same day.
+                </p>
+
+                <label class="settings-toggle-row">
+                    <div>
+                        <strong>Once per day</strong>
+                        <span>Recommended for normal attendance operation</span>
+                    </div>
+
+                    <input type="checkbox"
+                           id="attendance-once-per-day"
+                           name="attendance_once_per_day"
+                           {% if settings.attendance_once_per_day %}checked{% endif %}>
+
+                    <span class="settings-toggle"></span>
+                </label>
+            </article>
+
+
+            <article class="panel settings-panel">
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">CAMERA PREFERENCE</span>
+                        <h3>Camera Selection</h3>
+                    </div>
+                </div>
+
+                <p class="settings-description">
+                    Choose which connected camera should be used for attendance.
+                </p>
+
+                <div class="settings-field">
+                    <label for="camera-index">Camera Device</label>
+                    <select id="camera-index" name="camera_index">
+                        <option value="0" {% if settings.camera_index == 0 %}selected{% endif %}>Primary Camera</option>
+                        <option value="1" {% if settings.camera_index == 1 %}selected{% endif %}>Secondary Camera</option>
+                        <option value="2" {% if settings.camera_index == 2 %}selected{% endif %}>Additional Camera</option>
+                    </select>
+                </div>
+
+                <div class="settings-hint">
+                    Primary Camera is recommended for most devices.
+                </div>
+            </article>
+
+        </section>
+    </section>
+
+    <section class="panel settings-save-panel">
+        <div>
+            <span class="eyebrow">SAVE PREFERENCES</span>
+            <h3>Apply Settings</h3>
+            <p>Save the selected preferences for future attendance sessions.</p>
+        </div>
+        <div class="settings-save-actions">
+            <button type="button" class="secondary-button"
+                    id="restore-default-settings-button">Restore Defaults</button>
+            <button type="submit" class="primary-button" id="save-settings-button">
+                Save Changes
+                <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path>
+                </svg>
+            </button>
+        </div>
+    </section>
 </form>
+<style>
+.settings-mode-panel,.settings-default-panel{margin-bottom:22px}
+.settings-mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.settings-mode-card{position:relative;display:flex;align-items:flex-start;gap:12px;min-width:0;padding:18px;border:1px solid #c9dbea;border-radius:14px;background:#f8fbfe;cursor:pointer;transition:.2s ease}
+.settings-mode-card:hover{border-color:#8eb9dd;background:#f2f8fd}
+.settings-mode-card.active{border-color:#2563eb;background:#eef6ff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.settings-mode-card input{position:absolute;opacity:0;pointer-events:none}
+.settings-mode-radio{width:18px;height:18px;flex:0 0 18px;margin-top:2px;border:2px solid #8ba8bd;border-radius:50%;background:#fff;box-sizing:border-box}
+.settings-mode-card.active .settings-mode-radio{border:5px solid #2563eb}
+.settings-mode-copy{display:flex;flex:1 1 auto;min-width:0;flex-direction:column;gap:5px}
+.settings-mode-copy strong{color:#081f35;font-size:.95rem}
+.settings-mode-copy>span{color:#3d6079;font-size:.82rem;line-height:1.5}
+.settings-mode-tag{flex:0 0 auto;padding:5px 9px;border:1px solid #b8d6f3;border-radius:999px;background:#eaf4ff;color:#1856c9;font-size:.68rem;font-weight:800}
+.settings-friendly-summary{display:grid;gap:10px;margin-top:18px}
+.settings-summary-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 16px;border:1px solid #d5e3ed;border-radius:11px;background:#f8fbfd}
+.settings-summary-row>div{display:flex;min-width:0;flex-direction:column;gap:3px}
+.settings-summary-row strong{color:#0a2238;font-size:.88rem}
+.settings-summary-row span{color:#4b6a80;font-size:.78rem}
+.settings-summary-value{flex:0 0 auto;color:#1457c8!important;font-weight:800}
+.settings-save-actions{display:flex;align-items:center;gap:10px}
+.settings-field select{width:100%;min-height:44px;padding:0 12px;border:1px solid #c8d9e6;border-radius:9px;background:#fff;color:#0b2239;font:inherit}
+@media(max-width:760px){.settings-mode-grid{grid-template-columns:1fr}.settings-mode-tag{display:none}.settings-summary-row{align-items:flex-start;flex-direction:column;gap:7px}.settings-save-actions{width:100%;flex-direction:column-reverse;align-items:stretch}}
+
+.settings-level-guide {
+    margin-bottom: 22px;
+}
+
+.settings-level-instructions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.settings-instruction-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: 14px 15px;
+    border: 1px solid #d3e1eb;
+    border-radius: 11px;
+    background: #f8fbfd;
+}
+
+.settings-instruction-card strong {
+    color: #0a2238;
+    font-size: .88rem;
+}
+
+.settings-instruction-card span {
+    color: #48677f;
+    font-size: .78rem;
+    line-height: 1.5;
+}
+
+.settings-level-select {
+    width: 100%;
+    min-height: 44px;
+}
+
+.settings-level-help {
+    margin-top: 12px;
+    padding: 11px 13px;
+    border: 1px solid #d4e3ed;
+    border-radius: 9px;
+    background: #f7fafc;
+    color: #34566f;
+    font-size: .79rem;
+    line-height: 1.5;
+}
+
+.settings-level-help[data-level="medium"] {
+    border-color: #b9d7f4;
+    background: #eef6ff;
+    color: #174d82;
+}
+
+@media (max-width: 900px) {
+    .settings-level-instructions {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const defaultRadio = document.getElementById("settings-mode-default");
+    const customRadio = document.getElementById("settings-mode-custom");
+    const defaultCard = document.getElementById("default-mode-card");
+    const customCard = document.getElementById("custom-mode-card");
+    const defaultPanel = document.getElementById("settings-default-panel");
+    const customSection = document.getElementById("settings-custom-section");
+    const modeBadge = document.getElementById("settings-mode-badge");
+    const restoreButton = document.getElementById("restore-default-settings-button");
+
+    const recognitionLevel = document.getElementById("recognition-level");
+    const verificationLevel = document.getElementById("verification-level");
+    const livenessLevel = document.getElementById("liveness-level");
+
+    const recognitionValue = document.getElementById("recognition-confidence-threshold");
+    const verificationValue = document.getElementById("arcface-verification-threshold");
+    const livenessValue = document.getElementById("liveness-score-threshold");
+
+    const oncePerDay = document.getElementById("attendance-once-per-day");
+    const camera = document.getElementById("camera-index");
+
+    const LEVEL_VALUES = {
+        recognition: { low: "0.75", medium: "0.90", high: "0.95" },
+        verification: { low: "0.40", medium: "0.50", high: "0.65" },
+        liveness: { low: "0.55", medium: "0.70", high: "0.85" }
+    };
+
+    const HELP = {
+        recognition: {
+            low: "Low: Accepts identity matches more easily. Useful in difficult camera conditions, but less strict.",
+            medium: "Medium: Balanced recognition reliability and convenience. Recommended for normal use.",
+            high: "High: Requires stronger recognition confidence. More uncertain matches may be rejected."
+        },
+        verification: {
+            low: "Low: Allows more variation from the enrolled profile. Helpful with pose or lighting changes, but less strict.",
+            medium: "Medium: Balanced profile matching. Recommended for normal classroom attendance.",
+            high: "High: Requires a closer profile match. Better image quality and positioning may be needed."
+        },
+        liveness: {
+            low: "Low: More tolerant when lighting or camera quality is weak, but provides lighter protection.",
+            medium: "Medium: Balanced live-person checking. Recommended for everyday attendance.",
+            high: "High: Stronger live-person checking. Unclear or poorly lit attempts may be rejected more often."
+        }
+    };
+
+    function updateOne(select, hidden, help, type) {
+        const level = select.value;
+        hidden.value = LEVEL_VALUES[type][level];
+        help.textContent = HELP[type][level];
+        help.setAttribute("data-level", level);
+    }
+
+    function updateLevels() {
+        updateOne(
+            recognitionLevel,
+            recognitionValue,
+            document.getElementById("recognition-level-help"),
+            "recognition"
+        );
+        updateOne(
+            verificationLevel,
+            verificationValue,
+            document.getElementById("verification-level-help"),
+            "verification"
+        );
+        updateOne(
+            livenessLevel,
+            livenessValue,
+            document.getElementById("liveness-level-help"),
+            "liveness"
+        );
+    }
+
+    function setMediumDefaults() {
+        recognitionLevel.value = "medium";
+        verificationLevel.value = "medium";
+        livenessLevel.value = "medium";
+        oncePerDay.checked = true;
+        camera.value = "0";
+        updateLevels();
+    }
+
+    function updateMode() {
+        const custom = customRadio.checked;
+
+        defaultCard.classList.toggle("active", !custom);
+        customCard.classList.toggle("active", custom);
+
+        defaultPanel.hidden = custom;
+        customSection.hidden = !custom;
+
+        modeBadge.textContent = custom ? "Custom" : "Recommended";
+
+        if (!custom) {
+            setMediumDefaults();
+        }
+    }
+
+    defaultRadio.addEventListener("change", updateMode);
+    customRadio.addEventListener("change", updateMode);
+
+    recognitionLevel.addEventListener("change", updateLevels);
+    verificationLevel.addEventListener("change", updateLevels);
+    livenessLevel.addEventListener("change", updateLevels);
+
+    restoreButton.addEventListener("click", function () {
+        defaultRadio.checked = true;
+        customRadio.checked = false;
+        setMediumDefaults();
+        updateMode();
+    });
+
+    updateLevels();
+    updateMode();
+});
+</script>
+
 
 {% endblock %}

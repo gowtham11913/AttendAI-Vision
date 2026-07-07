@@ -472,5 +472,3 @@ class AttendanceLog(_SQLiteStore):
                 except Exception:
                     connection.rollback()
                     raise
-
-

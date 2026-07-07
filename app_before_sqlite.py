@@ -6,7 +6,7 @@ AttendAI Vision web application.
 Web registration mirrors register_student.py:
     FRONT 10 -> immediate duplicate-face check
     LEFT 10 -> RIGHT 10 -> UP 10 -> DOWN 10
-    -> finalize student database record -> background embeddings + SVM training
+    -> finalize student CSV -> background embeddings + SVM training
 
 Run:
     python app.py
@@ -15,7 +15,6 @@ Run:
 from __future__ import annotations
 
 import csv
-import sqlite3
 import secrets
 import shutil
 import sys
@@ -82,9 +81,8 @@ SVM_MODEL_PATH = MODELS_DIR / "svm_model.pkl"
 LABEL_ENCODER_PATH = MODELS_DIR / "label_encoder.pkl"
 YUNET_MODEL_PATH = MODELS_DIR / "face_detection_yunet_2023mar.onnx"
 
-DATABASE_FILE = DATABASE_DIR / "attendance.db"
-DATABASE_BACKUPS_DIR = DATABASE_DIR / "backups"
-DELETION_QUARANTINE_DIR = DATABASE_DIR / "deletion_quarantine"
+STUDENTS_CSV = DATABASE_DIR / "students.csv"
+ATTENDANCE_CSV = DATABASE_DIR / "attendance.csv"
 
 POSES = ["front", "left", "right", "up", "down"]
 POSE_INSTRUCTIONS = {
@@ -111,8 +109,8 @@ face_recognizer: FaceRecognizer | None = None
 antispoof_detector: AntiSpoofDetector | None = None
 identity_verifier: IdentityVerifier | None = None
 
-student_db = StudentDatabase(str(DATABASE_FILE))
-attendance_log = AttendanceLog(str(DATABASE_FILE))
+student_db = StudentDatabase(str(STUDENTS_CSV))
+attendance_log = AttendanceLog(str(ATTENDANCE_CSV))
 
 
 # Prevent simultaneous background retraining jobs from writing shared files.
@@ -127,12 +125,6 @@ _pipeline_jobs_lock = threading.Lock()
 # complete embeddings -> SVM -> recognizer -> verifier pipeline succeeds.
 REENROLL_TRANSACTIONS: dict[str, dict] = {}
 _reenroll_transactions_lock = threading.Lock()
-
-
-# Safe deletion transactions. Student artifacts and a consistent SQLite
-# backup remain available until the post-deletion model rebuild succeeds.
-DELETION_TRANSACTIONS: dict[str, dict] = {}
-_deletion_transactions_lock = threading.Lock()
 
 
 # ---------------------------------------------------------------------------
@@ -227,52 +219,21 @@ def get_registered_student_count() -> int:
 
 def get_present_today_count() -> int:
     try:
-        attendance_df = attendance_log.load()
-
-        if attendance_df.empty:
+        if not ATTENDANCE_CSV.is_file() or ATTENDANCE_CSV.stat().st_size == 0:
             return 0
-
         today = datetime.now().strftime("%Y-%m-%d")
-
-        if not {
-            "roll_no",
-            "date",
-            "status",
-        }.issubset(attendance_df.columns):
-            return 0
-
-        today_df = attendance_df[
-            (
-                attendance_df["date"]
-                .astype(str)
-                .str.strip()
-                == today
+        with ATTENDANCE_CSV.open("r", newline="", encoding="utf-8-sig") as fh:
+            rows = csv.DictReader(fh)
+            return sum(
+                1
+                for row in rows
+                if row.get("date") == today
+                and str(row.get("status", "")).lower() == "present"
             )
-            & (
-                attendance_df["status"]
-                .astype(str)
-                .str.strip()
-                .str.lower()
-                == "present"
-            )
-        ]
-
-        return (
-            today_df["roll_no"]
-            .astype(str)
-            .str.strip()
-            .str.upper()
-            .replace("", pd.NA)
-            .dropna()
-            .nunique()
-        )
-
     except Exception:
-        log.error(
-            "Failed to count today's attendance",
-            exc_info=True,
-        )
+        log.error("Failed to count today's attendance", exc_info=True)
         return 0
+
 
 def get_session(token: str) -> dict | None:
     cleanup_expired_registration_sessions()
@@ -556,185 +517,6 @@ def _run_post_registration_pipeline(job_id: str):
             )
 
 
-
-def _create_sqlite_backup(label: str) -> Path:
-    """
-    Create a consistent online SQLite backup using SQLite's backup API.
-
-    This remains safe with WAL mode and does not depend on copying
-    attendance.db-wal / attendance.db-shm manually.
-    """
-    DATABASE_BACKUPS_DIR.mkdir(parents=True, exist_ok=True)
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    safe_label = "".join(
-        ch for ch in str(label).upper()
-        if ch.isalnum() or ch in {"-", "_"}
-    ) or "backup"
-
-    backup_path = (
-        DATABASE_BACKUPS_DIR
-        / f"attendance_{timestamp}_{safe_label}.db"
-    )
-
-    source = sqlite3.connect(str(DATABASE_FILE), timeout=30.0)
-    destination = sqlite3.connect(str(backup_path), timeout=30.0)
-
-    try:
-        source.execute("PRAGMA busy_timeout = 30000")
-        source.backup(destination)
-        destination.commit()
-    finally:
-        destination.close()
-        source.close()
-
-    log.info("SQLite safety backup created: %s", backup_path)
-    return backup_path
-
-
-def _restore_sqlite_backup(backup_path: Path) -> None:
-    """Restore a previously created SQLite backup into the live database."""
-    if not backup_path.is_file():
-        raise FileNotFoundError(
-            f"SQLite backup not found: {backup_path}"
-        )
-
-    source = sqlite3.connect(str(backup_path), timeout=30.0)
-    destination = sqlite3.connect(str(DATABASE_FILE), timeout=30.0)
-
-    try:
-        destination.execute("PRAGMA busy_timeout = 30000")
-        source.backup(destination)
-        destination.commit()
-    finally:
-        destination.close()
-        source.close()
-
-    log.warning("SQLite database restored from backup: %s", backup_path)
-
-
-def _move_to_quarantine(
-    source_path: Path,
-    quarantine_dir: Path,
-) -> Path | None:
-    """Move one file/folder into the deletion transaction quarantine."""
-    if not source_path.exists():
-        return None
-
-    quarantine_dir.mkdir(parents=True, exist_ok=True)
-    target = quarantine_dir / source_path.name
-
-    if target.exists():
-        raise RuntimeError(
-            f"Deletion quarantine collision: {target}"
-        )
-
-    source_path.rename(target)
-    return target
-
-
-def _restore_quarantined_path(
-    quarantined_path: Path,
-    original_path: Path,
-) -> None:
-    if not quarantined_path.exists():
-        return
-
-    original_path.parent.mkdir(parents=True, exist_ok=True)
-
-    if original_path.exists():
-        if original_path.is_dir():
-            shutil.rmtree(original_path, ignore_errors=True)
-        else:
-            original_path.unlink(missing_ok=True)
-
-    quarantined_path.rename(original_path)
-
-
-def _rollback_deletion(job_id: str) -> None:
-    """
-    Restore SQLite, biometric artifacts, and recognition model files after
-    a failed post-deletion rebuild.
-    """
-    global face_recognizer
-    global identity_verifier
-
-    with _deletion_transactions_lock:
-        tx = DELETION_TRANSACTIONS.get(job_id)
-
-    if not tx:
-        return
-
-    backup_path = Path(tx["database_backup"])
-    moved_paths = list(tx.get("moved_paths", []))
-
-    try:
-        _restore_sqlite_backup(backup_path)
-
-        for item in reversed(moved_paths):
-            _restore_quarantined_path(
-                Path(item["quarantined"]),
-                Path(item["original"]),
-            )
-
-        settings = load_settings()
-
-        if (
-            SVM_MODEL_PATH.is_file()
-            and LABEL_ENCODER_PATH.is_file()
-        ):
-            face_recognizer = FaceRecognizer(
-                str(SVM_MODEL_PATH),
-                str(LABEL_ENCODER_PATH),
-                confidence_threshold=float(
-                    settings["recognition_confidence_threshold"]
-                ),
-            )
-        else:
-            face_recognizer = None
-
-        if identity_verifier is None:
-            identity_verifier = IdentityVerifier(
-                str(EMBEDDINGS_STUDENTS_DIR),
-                threshold=float(
-                    settings["arcface_verification_threshold"]
-                ),
-            )
-        else:
-            identity_verifier.reload()
-
-        log.warning(
-            "Deletion transaction rolled back successfully: %s",
-            tx["roll_no"],
-        )
-
-    finally:
-        quarantine_dir = Path(tx["quarantine_dir"])
-        if quarantine_dir.exists():
-            shutil.rmtree(quarantine_dir, ignore_errors=True)
-
-        with _deletion_transactions_lock:
-            DELETION_TRANSACTIONS.pop(job_id, None)
-
-
-def _commit_deletion(job_id: str) -> None:
-    """Permanently remove quarantined artifacts after rebuild success."""
-    with _deletion_transactions_lock:
-        tx = DELETION_TRANSACTIONS.pop(job_id, None)
-
-    if not tx:
-        return
-
-    quarantine_dir = Path(tx["quarantine_dir"])
-    if quarantine_dir.exists():
-        shutil.rmtree(quarantine_dir, ignore_errors=True)
-
-    log.info(
-        "Deletion transaction committed successfully: %s",
-        tx["roll_no"],
-    )
-
-
 def _run_post_deletion_pipeline(job_id: str):
     """
     Rebuild runtime identity state after deleting a student.
@@ -793,8 +575,6 @@ def _run_post_deletion_pipeline(job_id: str):
                 else:
                     identity_verifier.reload()
 
-                _commit_deletion(job_id)
-
                 _set_pipeline_job(
                     job_id,
                     status="ready",
@@ -847,8 +627,6 @@ def _run_post_deletion_pipeline(job_id: str):
             else:
                 identity_verifier.reload()
 
-            _commit_deletion(job_id)
-
             _set_pipeline_job(
                 job_id,
                 status="ready",
@@ -862,15 +640,6 @@ def _run_post_deletion_pipeline(job_id: str):
                 job_id,
                 exc,
             )
-
-            try:
-                _rollback_deletion(job_id)
-            except Exception:
-                log.exception(
-                    "Deletion rollback failed for job %s",
-                    job_id,
-                )
-
             _set_pipeline_job(
                 job_id,
                 status="failed",
@@ -997,7 +766,7 @@ def create_app() -> FastAPI:
         )
 
         # Default values keep the dashboard safe
-        # even if database records are empty or unavailable.
+        # even if CSV files are empty or unavailable.
         total_students = 0
         present_today = 0
         total_attendance_records = 0
@@ -2554,7 +2323,7 @@ def create_app() -> FastAPI:
         If the name changes:
             1. Rename dataset folder.
             2. Rename per-student embedding file.
-            3. Update the student database record.
+            3. Update students.csv.
             4. Rebuild SVM classifier.
             5. Reload FaceRecognizer.
             6. Reload IdentityVerifier.
@@ -2665,7 +2434,7 @@ def create_app() -> FastAPI:
                     embedding_renamed = True
 
             # ------------------------------------------------------
-            # 2. Update the student database only after artifact rename
+            # 2. Update students.csv only after artifact rename
             # ------------------------------------------------------
             updated_student = student_db.update_student(
                 normalized_roll_no,
@@ -2763,7 +2532,7 @@ def create_app() -> FastAPI:
 
         except ValueError as exc:
             # ------------------------------------------------------
-            # Roll back filesystem changes if database update failed
+            # Roll back filesystem changes if CSV update failed
             # ------------------------------------------------------
             if (
                 embedding_renamed
@@ -2863,8 +2632,8 @@ def create_app() -> FastAPI:
     async def delete_student(roll_no: str):
         global identity_verifier
 
-        normalized_roll_no = str(roll_no).strip().upper()
-        student = student_db.get_student(normalized_roll_no)
+        roll_no = roll_no.upper()
+        student = student_db.get_student(roll_no)
 
         if student is None:
             raise HTTPException(
@@ -2872,202 +2641,107 @@ def create_app() -> FastAPI:
                 detail="Student not found.",
             )
 
-        # Serialize destructive work with embedding/training jobs.
-        with _pipeline_lock:
-            transaction_id = secrets.token_hex(12)
-            quarantine_dir = (
-                DELETION_QUARANTINE_DIR
-                / f"{normalized_roll_no}_{transaction_id}"
-            )
-
-            database_backup: Path | None = None
-            moved_paths: list[dict[str, str]] = []
-
-            try:
-                # 1. Create a consistent SQLite backup before changing anything.
-                database_backup = _create_sqlite_backup(
-                    f"before_delete_{normalized_roll_no}"
-                )
-
-                # 2. Quarantine dataset folders instead of destroying them.
-                dataset_candidates = list(
-                    STUDENTS_DATASET_DIR.glob(
-                        f"{normalized_roll_no}_*"
-                    )
-                ) + list(
-                    STUDENTS_DATASET_DIR.glob(
-                        f".reenroll_{normalized_roll_no}_*"
-                    )
-                )
-
-                for original in dataset_candidates:
-                    if not original.exists():
-                        continue
-
-                    quarantined = _move_to_quarantine(
-                        original,
-                        quarantine_dir / "dataset",
-                    )
-                    if quarantined is not None:
-                        moved_paths.append(
-                            {
-                                "original": str(original),
-                                "quarantined": str(quarantined),
-                            }
-                        )
-
-                # 3. Quarantine per-student embeddings.
-                for original in EMBEDDINGS_STUDENTS_DIR.glob(
-                    f"{normalized_roll_no}_*.npy"
-                ):
-                    quarantined = _move_to_quarantine(
-                        original,
-                        quarantine_dir / "embeddings",
-                    )
-                    if quarantined is not None:
-                        moved_paths.append(
-                            {
-                                "original": str(original),
-                                "quarantined": str(quarantined),
-                            }
-                        )
-
-                # 4. Back up current classifier artifacts too. A failed rebuild
-                #    must not leave a partially replaced recognition model.
-                for original in (
-                    SVM_MODEL_PATH,
-                    LABEL_ENCODER_PATH,
-                ):
-                    if original.exists():
-                        quarantined = _move_to_quarantine(
-                            original,
-                            quarantine_dir / "models",
-                        )
-                        if quarantined is not None:
-                            moved_paths.append(
-                                {
-                                    "original": str(original),
-                                    "quarantined": str(quarantined),
-                                }
-                            )
-
-                # Restore working model files immediately from quarantine copies
-                # so the background rebuild can replace them normally while the
-                # rollback copies remain protected.
-                for item in list(moved_paths):
-                    original = Path(item["original"])
-                    quarantined = Path(item["quarantined"])
-
-                    if original in {
-                        SVM_MODEL_PATH,
-                        LABEL_ENCODER_PATH,
-                    }:
-                        original.parent.mkdir(
-                            parents=True,
-                            exist_ok=True,
-                        )
-                        shutil.copy2(
-                            quarantined,
-                            original,
-                        )
-
-                # 5. Delete the master row. SQLite ON DELETE CASCADE removes
-                #    this student's attendance history atomically.
-                if not student_db.delete_student(
-                    normalized_roll_no
-                ):
-                    raise RuntimeError(
-                        "Student disappeared before database deletion."
-                    )
-
-                # 6. Remove deleted embeddings from verifier memory immediately.
-                if identity_verifier is not None:
-                    identity_verifier.reload()
-
-                # 7. Register rollback state before starting background rebuild.
-                job_id = secrets.token_urlsafe(18)
-
-                with _deletion_transactions_lock:
-                    DELETION_TRANSACTIONS[job_id] = {
-                        "roll_no": normalized_roll_no,
-                        "database_backup": str(database_backup),
-                        "quarantine_dir": str(quarantine_dir),
-                        "moved_paths": moved_paths,
-                    }
-
-                _set_pipeline_job(
-                    job_id,
-                    status="queued",
-                    message="Rebuilding model after deletion...",
-                    progress=5,
-                )
-
-                threading.Thread(
-                    target=_run_post_deletion_pipeline,
-                    args=(job_id,),
-                    name=f"delete-retrain-{normalized_roll_no}",
-                    daemon=True,
-                ).start()
-
-                return {
-                    "success": True,
-                    "message": (
-                        "Student deletion staged safely. Attendance history "
-                        "was removed by SQLite cascade and model rebuild started."
-                    ),
-                    "pipeline_job_id": job_id,
-                }
-
-            except Exception as exc:
-                log.exception(
-                    "Safe deletion staging failed for %s: %s",
-                    normalized_roll_no,
-                    exc,
-                )
-
-                # Restore database if it may have been modified.
-                if database_backup is not None:
-                    try:
-                        _restore_sqlite_backup(database_backup)
-                    except Exception:
-                        log.exception(
-                            "Database restore failed after deletion staging error"
-                        )
-
-                # Restore every artifact already moved.
-                for item in reversed(moved_paths):
-                    try:
-                        _restore_quarantined_path(
-                            Path(item["quarantined"]),
-                            Path(item["original"]),
-                        )
-                    except Exception:
-                        log.exception(
-                            "Artifact restore failed: %s",
-                            item,
-                        )
-
-                if quarantine_dir.exists():
+        try:
+            # 1. Remove all captured face datasets for this roll number.
+            for folder in STUDENTS_DATASET_DIR.glob(
+                f"{roll_no}_*"
+            ):
+                if folder.is_dir():
                     shutil.rmtree(
-                        quarantine_dir,
+                        folder,
                         ignore_errors=True,
                     )
 
-                try:
-                    if identity_verifier is not None:
-                        identity_verifier.reload()
-                except Exception:
-                    log.exception(
-                        "Verifier reload failed after deletion rollback"
+            # Also remove any abandoned temporary re-enrollment capture.
+            for folder in STUDENTS_DATASET_DIR.glob(
+                f".reenroll_{roll_no}_*"
+            ):
+                if folder.is_dir():
+                    shutil.rmtree(
+                        folder,
+                        ignore_errors=True,
                     )
 
-                raise HTTPException(
-                    status_code=500,
-                    detail=(
-                        "Unable to delete student safely. "
-                        "Rollback was attempted."
-                    ),
+            # 2. Remove all stored per-student embeddings.
+            for emb in EMBEDDINGS_STUDENTS_DIR.glob(
+                f"{roll_no}_*.npy"
+            ):
+                emb.unlink(missing_ok=True)
+
+            # 3. Remove all attendance history for this student.
+            # Write through a temporary file so the CSV is not left half-written.
+            attendance_df = attendance_log.load()
+
+            if not attendance_df.empty and "roll_no" in attendance_df.columns:
+                remaining_attendance = attendance_df[
+                    attendance_df["roll_no"]
+                    .astype(str)
+                    .str.strip()
+                    .str.upper()
+                    != roll_no
+                ].copy()
+
+                temp_attendance_csv = ATTENDANCE_CSV.with_suffix(
+                    ".delete.tmp"
                 )
+                remaining_attendance.to_csv(
+                    temp_attendance_csv,
+                    index=False,
+                )
+                temp_attendance_csv.replace(
+                    ATTENDANCE_CSV
+                )
+
+            # 4. Remove student master record.
+            if not student_db.delete_student(roll_no):
+                raise HTTPException(
+                    status_code=404,
+                    detail="Student not found.",
+                )
+
+            # 5. Reload verifier immediately so deleted embeddings disappear
+            # from verification memory before the SVM rebuild completes.
+            if identity_verifier is not None:
+                identity_verifier.reload()
+
+            # 6. Rebuild classifier asynchronously. The dedicated deletion
+            # pipeline safely handles the <2 remaining students edge case.
+            job_id = secrets.token_urlsafe(18)
+            _set_pipeline_job(
+                job_id,
+                status="queued",
+                message="Rebuilding model after deletion...",
+                progress=5,
+            )
+
+            threading.Thread(
+                target=_run_post_deletion_pipeline,
+                args=(job_id,),
+                name=f"delete-retrain-{roll_no}",
+                daemon=True,
+            ).start()
+
+            return {
+                "success": True,
+                "message": (
+                    "Student, attendance history, captured images, and "
+                    "embeddings deleted. Model rebuild started."
+                ),
+                "pipeline_job_id": job_id,
+            }
+
+        except HTTPException:
+            raise
+        except Exception as exc:
+            log.exception(
+                "Unable to fully delete student %s: %s",
+                roll_no,
+                exc,
+            )
+            raise HTTPException(
+                status_code=500,
+                detail="Unable to fully delete student.",
+            )
 
 
     @app.post("/api/students/{roll_no}/reenroll")
@@ -3122,8 +2796,8 @@ def create_app() -> FastAPI:
             "model_ready": svm_ready and encoder_ready,
             "svm_model": svm_ready,
             "label_encoder": encoder_ready,
-            "students_database": DATABASE_FILE.is_file(),
-            "attendance_database": DATABASE_FILE.is_file(),
+            "students_database": STUDENTS_CSV.is_file(),
+            "attendance_database": ATTENDANCE_CSV.is_file(),
             "student_count": get_registered_student_count(),
             "present_today": get_present_today_count(),
             "timestamp": datetime.now().isoformat(),
