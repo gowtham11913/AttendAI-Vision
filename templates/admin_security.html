@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Security | AttendAI Vision</title>
+    <style>
+        *{box-sizing:border-box}
+        body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#10243a}
+        .page{min-height:100vh;padding:38px 24px}
+        .wrap{width:min(100%,1230px);margin:auto}
+        .hero{padding:34px 36px;border-radius:20px;background:#0b2239;color:#fff;box-shadow:0 18px 45px rgba(11,34,57,.10)}
+        .eyebrow{display:block;margin-bottom:12px;color:#83c5ff;font-size:.95rem;font-weight:800;letter-spacing:.14em}
+        .hero h1{margin:0;font-size:clamp(2rem,4vw,2.65rem);line-height:1.1}
+        .hero p{margin:12px 0 0;color:#d7e5f1;font-size:1.05rem;line-height:1.6}
+        .content{display:grid;grid-template-columns:minmax(0,760px);justify-content:center;margin-top:26px}
+        .card{padding:32px;border:1px solid #d7e2ec;border-radius:18px;background:#fff;box-shadow:0 18px 45px rgba(15,35,55,.08)}
+        .card h2{margin:0;font-size:1.8rem}.card .sub{margin:10px 0 26px;color:#60758a;line-height:1.55}
+        .message{margin-bottom:22px;padding:14px 16px;border-radius:10px;font-weight:600}
+        .error{border:1px solid #fecaca;background:#fff1f2;color:#b42332}
+        .success{border:1px solid #bbf7d0;background:#f0fdf4;color:#167044}
+        form{display:grid;gap:20px}.field label{display:block;margin-bottom:8px;font-weight:700}
+        .field input{width:100%;min-height:54px;padding:0 15px;border:1px solid #c9d8e6;border-radius:11px;font:inherit;outline:none}
+        .field input:focus{border-color:#2478b8;box-shadow:0 0 0 4px rgba(36,120,184,.12)}
+        .note{margin:-4px 0 0;color:#60758a;font-size:.92rem;line-height:1.5}
+        button,.back{display:inline-flex;align-items:center;justify-content:center;width:fit-content;min-height:52px;padding:0 24px;border:0;border-radius:11px;background:#2478b8;color:#fff;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}
+        .footer{display:flex;justify-content:center;margin-top:24px}.back{background:#0b2239}
+        @media(max-width:700px){.page{padding:20px 14px}.hero{padding:26px 22px}.card{padding:24px 20px}button{width:100%}}
+    </style>
+</head>
+<body>
+<main class="page"><div class="wrap">
+    <header class="hero">
+        <span class="eyebrow">ADMINISTRATOR SECURITY</span>
+        <h1>Account & Password Management</h1>
+        <p>Manage your administrator account password and maintain secure access to AttendAI Vision.</p>
+    </header>
+
+    <section class="content"><article class="card">
+        <h2>Change My Password</h2>
+        <p class="sub">Signed in as <strong>{{ admin_username }}</strong>.</p>
+
+        {% if error %}<div class="message error">{{ error }}</div>{% endif %}
+        {% if success %}<div class="message success">{{ success }}</div>{% endif %}
+
+        <form method="post" action="/admin/change-password">
+            <div class="field">
+                <label for="current_password">Current Password</label>
+                <input id="current_password" name="current_password" type="password" autocomplete="current-password" required>
+            </div>
+            <div class="field">
+                <label for="new_password">New Password</label>
+                <input id="new_password" name="new_password" type="password" minlength="8" autocomplete="new-password" required>
+            </div>
+            <div class="field">
+                <label for="confirm_password">Confirm New Password</label>
+                <input id="confirm_password" name="confirm_password" type="password" minlength="8" autocomplete="new-password" required>
+            </div>
+            <p class="note">Use at least 8 characters and choose a password different from your current password.</p>
+            <button type="submit">Change Password</button>
+        </form>
+    </article></section>
+
+    <div class="footer"><a href="/overview" class="back">Back to Overview</a></div>
+</div></main>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Sign In | AttendAI Vision</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/access.css') }}">
+</head>
+<body class="login-page">
+<main class="login-shell">
+    <a class="back-link" href="/">← Back to access portal</a>
+
+    <section class="login-card">
+        <div class="login-brand">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M7 4H5a1 1 0 0 0-1 1v2M17 4h2a1 1 0 0 1 1 1v2M7 20H5a1 1 0 0 1-1-1v-2M17 20h2a1 1 0 0 0 1-1v-2"/>
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M7.5 17c.8-2.2 2.3-3.3 4.5-3.3s3.7 1.1 4.5 3.3"/>
+                </svg>
+            </span>
+            <strong>AttendAI Vision</strong>
+        </div>
+
+        <span class="access-eyebrow">STUDENT ACCESS</span>
+        <h1>View your attendance</h1>
+        <p class="login-lead">Sign in to access your personal attendance summary and history.</p>
+
+        {% if error %}
+        <div class="login-alert" role="alert">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" action="/login/student" class="login-form">
+            <label>
+                <span>Roll Number</span>
+                <input
+                    type="text"
+                    name="username"
+                    autocomplete="username"
+                    placeholder="Enter your roll number"
+                    required
+                    autofocus
+                >
+            </label>
+
+            <label>
+                <span>Password</span>
+                <div class="password-field">
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                        required
+                    >
+                    <button type="button" id="toggle-password" aria-label="Show password">Show</button>
+                </div>
+            </label>
+
+            <button type="submit" class="login-submit">
+                Sign in securely <span>→</span>
+            </button>
+        </form>
+
+        <p class="login-help">Having trouble signing in? Contact your system administrator.</p>
+    </section>
+</main>
+
+<script>
+const toggle = document.getElementById("toggle-password");
+const password = document.getElementById("password");
+toggle.addEventListener("click", () => {
+    const show = password.type === "password";
+    password.type = show ? "text" : "password";
+    toggle.textContent = show ? "Hide" : "Show";
+    toggle.setAttribute("aria-label", show ? "Hide password" : "Show password");
+});
+</script>
+</body>
+</html>

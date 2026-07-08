@@ -18,9 +18,18 @@ import csv
 import sqlite3
 import secrets
 import shutil
+import string
 import sys
 import threading
 import time
+import os
+
+from starlette.middleware.sessions import SessionMiddleware
+from backend.auth_routes import router as auth_router
+from backend.auth_database import (
+    create_student_account,
+    student_account_exists,
+)
 from config import (
     ARCFACE_VERIFICATION_THRESHOLD,
     LIVENESS_SCORE_THRESHOLD,
@@ -49,6 +58,7 @@ from fastapi import (
 from fastapi.responses import (
     HTMLResponse,
     JSONResponse,
+    RedirectResponse,
 )
 
 from fastapi.staticfiles import StaticFiles
@@ -195,6 +205,38 @@ class StudentValidationRequest(BaseModel):
         if len(normalized) < 2:
             raise ValueError("Invalid department.")
         return normalized
+
+
+def generate_student_temporary_password(
+    length: int = 12,
+) -> str:
+    """
+    Generate a strong temporary password for a newly registered
+    student portal account.
+
+    This helper is intentionally defined at module scope because the
+    post-registration pipeline runs in a background thread outside
+    create_app().
+    """
+    alphabet = (
+        string.ascii_letters
+        + string.digits
+        + "@#$!"
+    )
+
+    while True:
+        password = "".join(
+            secrets.choice(alphabet)
+            for _ in range(length)
+        )
+
+        if (
+            any(char.islower() for char in password)
+            and any(char.isupper() for char in password)
+            and any(char.isdigit() for char in password)
+            and any(char in "@#$!" for char in password)
+        ):
+            return password
 
 
 def cleanup_expired_registration_sessions() -> None:
@@ -517,6 +559,54 @@ def _run_post_registration_pipeline(job_id: str):
                 )
             else:
                 identity_verifier.reload()
+
+            # ---------------------------------------------------------
+            # Create a student portal account only when this pipeline
+            # belongs to a registration job and no account exists yet.
+            #
+            # Re-enrollment preserves the student's current password.
+            # Other retraining jobs (for example a name edit) may not
+            # contain roll_no and therefore skip account creation.
+            # ---------------------------------------------------------
+            with _pipeline_jobs_lock:
+                job_data = dict(
+                    PIPELINE_JOBS.get(job_id, {})
+                )
+
+            roll_no = str(
+                job_data.get("roll_no", "")
+            ).strip().upper()
+
+            portal_credentials = None
+
+            if (
+                roll_no
+                and not student_account_exists(roll_no)
+            ):
+                temporary_password = (
+                    generate_student_temporary_password()
+                )
+
+                create_student_account(
+                    roll_no=roll_no,
+                    password=temporary_password,
+                )
+
+                portal_credentials = {
+                    "username": roll_no,
+                    "temporary_password": temporary_password,
+                }
+
+                log.info(
+                    "Student portal account created for %s",
+                    roll_no,
+                )
+
+            with _pipeline_jobs_lock:
+                if job_id in PIPELINE_JOBS:
+                    PIPELINE_JOBS[job_id][
+                        "student_portal"
+                    ] = portal_credentials
 
             _commit_reenrollment(job_id)
 
@@ -986,11 +1076,57 @@ def create_app() -> FastAPI:
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
     templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=os.getenv(
+            "ATTENDAI_SESSION_SECRET",
+            "attendai-development-secret-change-this"
+        ),
+        same_site="lax",
+        https_only=False,
+        max_age=60 * 60 * 8
+    )
 
 
 
-    @app.get("/", response_class=HTMLResponse)
+
+    app.state.templates = templates
+
+    app.include_router(auth_router)
+
+
+    # ---------------------------------------------------------------------------
+    # Authentication helpers
+    # ---------------------------------------------------------------------------
+
+    def require_admin(request: Request):
+        if request.session.get("role") != "admin":
+            return RedirectResponse(
+                url="/login/admin",
+                status_code=303,
+            )
+        return None
+    
+
+    def require_admin_api(request: Request) -> None:
+        if request.session.get("role") != "admin":
+            raise HTTPException(
+                status_code=401,
+                detail="Administrator authentication required.",
+            )
+        
+
+    # ---------------------------------------------------------------------------
+    # Protected administrator routes
+    # ---------------------------------------------------------------------------
+
+    @app.get("/overview", response_class=HTMLResponse)
     async def dashboard(request: Request):
+
+        auth_redirect = require_admin(request)
+        if auth_redirect:
+            return auth_redirect
+
         model_ready = (
             SVM_MODEL_PATH.is_file()
             and LABEL_ENCODER_PATH.is_file()
@@ -1108,12 +1244,15 @@ def create_app() -> FastAPI:
 
 
 
-
-
-
     @app.get("/register", response_class=HTMLResponse)
     async def register_page(request: Request):
+
+        auth_redirect = require_admin(request)
+        if auth_redirect:
+            return auth_redirect
+
         return templates.TemplateResponse(
+
             request=request,
             name="register.html",
             context={
@@ -1127,6 +1266,11 @@ def create_app() -> FastAPI:
 
     @app.get("/students", response_class=HTMLResponse)
     async def students_page(request: Request):
+
+        auth_redirect = require_admin(request)
+        if auth_redirect:
+            return auth_redirect
+
         try:
             students_df = student_db.load()
 
@@ -1158,6 +1302,11 @@ def create_app() -> FastAPI:
 
     @app.get("/attendance", response_class=HTMLResponse)
     async def attendance_records_page(request: Request):
+
+        auth_redirect = require_admin(request)
+        if auth_redirect:
+            return auth_redirect
+
         try:
             attendance_df = attendance_log.load()
 
@@ -1227,9 +1376,13 @@ def create_app() -> FastAPI:
                 "unique_students": unique_students,
             },
         )
-
     @app.get("/analytics", response_class=HTMLResponse)
     async def analytics_page(request: Request):
+
+        auth_redirect = require_admin(request)
+        if auth_redirect:
+            return auth_redirect
+
         total_records = 0
         unique_students = 0
         present_today = 0
@@ -1419,6 +1572,11 @@ def create_app() -> FastAPI:
 
     @app.get("/settings", response_class=HTMLResponse)
     async def settings_page(request: Request):
+
+        auth_redirect = require_admin(request)
+        if auth_redirect:
+            return auth_redirect
+
         try:
             settings = load_settings()
 
@@ -1533,10 +1691,13 @@ def create_app() -> FastAPI:
 
 
 
-
-
     @app.get("/live-attendance", response_class=HTMLResponse)
     async def live_attendance_page(request: Request):
+
+        auth_redirect = require_admin(request)
+        if auth_redirect:
+            return auth_redirect
+
         model_ready = (
             SVM_MODEL_PATH.is_file()
             and LABEL_ENCODER_PATH.is_file()
@@ -1950,9 +2111,13 @@ def create_app() -> FastAPI:
             },
         )
 
-
     @app.get("/register/capture/{registration_token}", response_class=HTMLResponse)
     async def capture_page(request: Request, registration_token: str):
+
+        auth_redirect = require_admin(request)
+        if auth_redirect:
+            return auth_redirect
+
         session = get_session(registration_token)
         if session is None:
             return templates.TemplateResponse(
@@ -2457,6 +2622,10 @@ def create_app() -> FastAPI:
                 message="Preparing registration...",
                 progress=5,
             )
+            with _pipeline_jobs_lock:
+                PIPELINE_JOBS[job_id]["roll_no"] = str(
+                    student["roll_no"]
+                ).strip().upper()
 
             threading.Thread(
                 target=_run_post_registration_pipeline,

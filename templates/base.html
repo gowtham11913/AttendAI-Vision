@@ -58,7 +58,7 @@
         <nav class="sidebar-nav" aria-label="Primary navigation">
 
             <a
-                href="/"
+                href="/overview"
                 class="nav-item {% if active_page == 'overview' %}active{% endif %}"
                 {% if active_page == 'overview' %}aria-current="page"{% endif %}
             >
@@ -225,13 +225,137 @@
                     <span>System Online</span>
                 </div>
 
-                <div class="profile-chip">
-                    <div class="profile-avatar">A</div>
+                <div class="admin-menu" id="admin-menu">
 
-                    <div>
-                        <strong>Administrator</strong>
-                        <small>System Control</small>
+                    <button
+                        type="button"
+                        class="profile-chip admin-menu-trigger"
+                        id="admin-menu-trigger"
+                        aria-expanded="false"
+                        aria-controls="admin-menu-dropdown"
+                    >
+                        <div class="profile-avatar">
+                            A
+                        </div>
+
+                        <div class="admin-trigger-copy">
+                            <strong>
+                                Administrator
+                            </strong>
+
+                            <small>
+                                Account Menu
+                            </small>
+                        </div>
+
+                        <svg
+                            class="admin-chevron"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path d="m7 10 5 5 5-5"></path>
+                        </svg>
+
+                    </button>
+
+
+                    <div
+                        class="admin-menu-dropdown"
+                        id="admin-menu-dropdown"
+                        hidden
+                    >
+
+                        <div class="admin-menu-header">
+
+                            <div class="profile-avatar">
+                                A
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Administrator
+                                </strong>
+
+                                <small>
+                                    Authorized Access
+                                </small>
+                            </div>
+
+                        </div>
+
+
+                        <div class="admin-menu-links">
+
+                            <a href="/admin/security">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                                    <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                                    <circle cx="12" cy="15" r="1"></circle>
+                                </svg>
+                                <span>Administrator Security</span>
+                            </a>
+                            <a href="/admin/student-passwords">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="9" cy="8" r="3"></circle>
+                                    <path d="M3.5 19c.8-3.4 2.6-5 5.5-5s4.7 1.6 5.5 5"></path>
+                                    <path d="M16 11h5"></path>
+                                    <path d="M18.5 8.5v5"></path>
+                                </svg>
+                                <span>Student Password Management</span>
+                            </a>
+
+                            <a href="/settings">
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    aria-hidden="true"
+                                >
+                                    <circle cx="12" cy="12" r="3"></circle>
+
+                                    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3"></path>
+
+                                    <path d="M9 19.4A1.7 1.7 0 0 0 8 21v.2"></path>
+
+                                    <path d="M5 15a1.7 1.7 0 0 1-1.6-1H3"></path>
+
+                                    <path d="M5 9A1.7 1.7 0 0 0 3.4 10H3"></path>
+
+                                    <path d="M9 4.6A1.7 1.7 0 0 0 10 3v-.2"></path>
+
+                                    <path d="M15 4.6A1.7 1.7 0 0 1 16.9 4.3"></path>
+                                </svg>
+
+                                <span>
+                                    Settings
+                                </span>
+
+                            </a>
+
+
+                            <a
+                                href="/logout"
+                                class="admin-logout-link"
+                            >
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M10 17l5-5-5-5"></path>
+                                    <path d="M15 12H3"></path>
+                                    <path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"></path>
+                                </svg>
+
+                                <span>
+                                    Logout
+                                </span>
+
+                            </a>
+
+                        </div>
+
                     </div>
+
                 </div>
 
             </div>
@@ -262,9 +386,102 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
 
-<script src="{{ url_for('static', path='/js/app.js') }}?v=20"></script>
+<script src="{{ url_for('static', path='/js/app.js') }}?v=21"></script>
+
+<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const adminMenu =
+            document.getElementById("admin-menu");
+
+        const adminTrigger =
+            document.getElementById("admin-menu-trigger");
+
+        const adminDropdown =
+            document.getElementById("admin-menu-dropdown");
+
+
+        if (
+            !adminMenu ||
+            !adminTrigger ||
+            !adminDropdown
+        ) {
+            return;
+        }
+
+
+        function closeAdminMenu() {
+
+            adminDropdown.hidden = true;
+
+            adminTrigger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+
+        function openAdminMenu() {
+
+            adminDropdown.hidden = false;
+
+            adminTrigger.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        }
+
+
+        adminTrigger.addEventListener(
+            "click",
+            function (event) {
+
+                event.stopPropagation();
+
+                if (adminDropdown.hidden) {
+                    openAdminMenu();
+                } else {
+                    closeAdminMenu();
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    !adminMenu.contains(event.target)
+                ) {
+                    closeAdminMenu();
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Escape") {
+                    closeAdminMenu();
+                }
+
+            }
+        );
+
+    }
+);
+</script>
 
 {% block scripts %}{% endblock %}
 
 </body>
 </html>
+
+

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}
+Administrator Profile | AttendAI Vision
+{% endblock %}
+
+{% block content %}
+
+<section class="registration-header">
+    <div>
+        <span class="eyebrow">ADMINISTRATOR ACCOUNT</span>
+        <h2>Profile & Security</h2>
+        <p>
+            Manage administrator account security and update your password.
+        </p>
+    </div>
+
+    <div class="registration-status">
+        <span class="status-dot"></span>
+        Authorized Access
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <span class="eyebrow">ACCOUNT SECURITY</span>
+            <h3>Change Administrator Password</h3>
+        </div>
+    </div>
+
+    {% if error %}
+    <div class="auth-message auth-message-error">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if success %}
+    <div class="auth-message auth-message-success">
+        {{ success }}
+    </div>
+    {% endif %}
+
+    <form
+        method="post"
+        action="/admin/change-password"
+        class="settings-form"
+        style="max-width: 620px;"
+    >
+        <div class="form-group">
+            <label for="current_password">
+                Current Password
+            </label>
+            <input
+                id="current_password"
+                name="current_password"
+                type="password"
+                autocomplete="current-password"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="new_password">
+                New Password
+            </label>
+            <input
+                id="new_password"
+                name="new_password"
+                type="password"
+                minlength="8"
+                autocomplete="new-password"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">
+                Confirm New Password
+            </label>
+            <input
+                id="confirm_password"
+                name="confirm_password"
+                type="password"
+                minlength="8"
+                autocomplete="new-password"
+                required
+            >
+        </div>
+
+        <button type="submit" class="primary-button">
+            Change Administrator Password
+        </button>
+    </form>
+</section>
+
+{% endblock %}

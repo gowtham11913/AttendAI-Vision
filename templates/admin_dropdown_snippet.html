@@ -1,0 +1,64 @@
+<!--
+Replace your current static Administrator block in base.html with this.
+-->
+<div class="admin-menu" id="admin-menu">
+    <button
+        type="button"
+        class="admin-menu-trigger"
+        id="admin-menu-trigger"
+        aria-expanded="false"
+        aria-controls="admin-menu-dropdown"
+    >
+        <span class="admin-avatar">A</span>
+        <span class="admin-copy">
+            <strong>Administrator</strong>
+            <small>System Control</small>
+        </span>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m7 10 5 5 5-5"></path>
+        </svg>
+    </button>
+
+    <div class="admin-menu-dropdown" id="admin-menu-dropdown" hidden>
+        <div class="admin-menu-head">
+            <span class="admin-avatar">A</span>
+            <div>
+                <strong>Administrator</strong>
+                <small>Authorized access</small>
+            </div>
+        </div>
+
+        <a href="/settings">Settings</a>
+        <a href="/logout" class="admin-logout-link">Logout</a>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const menu = document.getElementById("admin-menu");
+    const trigger = document.getElementById("admin-menu-trigger");
+    const dropdown = document.getElementById("admin-menu-dropdown");
+
+    if (!menu || !trigger || !dropdown) return;
+
+    function closeMenu() {
+        dropdown.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+    }
+
+    trigger.addEventListener("click", function (event) {
+        event.stopPropagation();
+        const willOpen = dropdown.hidden;
+        dropdown.hidden = !willOpen;
+        trigger.setAttribute("aria-expanded", String(willOpen));
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!menu.contains(event.target)) closeMenu();
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeMenu();
+    });
+});
+</script>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | AttendAI Vision</title>
+    <meta name="description" content="Secure role-based access to AttendAI Vision.">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/access.css') }}">
+</head>
+<body class="access-page">
+<main class="access-shell">
+    <header class="access-nav">
+        <a class="access-brand" href="/">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M7 4H5a1 1 0 0 0-1 1v2M17 4h2a1 1 0 0 1 1 1v2M7 20H5a1 1 0 0 1-1-1v-2M17 20h2a1 1 0 0 0 1-1v-2"/>
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M7.5 17c.8-2.2 2.3-3.3 4.5-3.3s3.7 1.1 4.5 3.3"/>
+                </svg>
+            </span>
+            <span>
+                <strong>AttendAI Vision</strong>
+                <small>Intelligent Attendance Management</small>
+            </span>
+        </a>
+        <span class="access-status"><i></i> Secure Access</span>
+    </header>
+
+    <section class="access-hero">
+        <div class="access-intro">
+            <span class="access-eyebrow">WELCOME TO ATTENDAI VISION</span>
+            <h1>Attendance access,<br><span>designed around your role.</span></h1>
+            <p>
+                An intelligent attendance platform that identifies registered students in real time, verifies genuine presence, and records attendance automatically for accurate and efficient classroom management.
+            </p>
+            <div class="trust-row">
+                <span><i></i> Role-based access</span>
+                <span><i></i> Protected sessions</span>
+                <span><i></i> Clear attendance visibility</span>
+            </div>
+        </div>
+
+        <div class="role-panel">
+            <div class="role-panel-head">
+                <span class="access-eyebrow">CHOOSE YOUR ACCESS</span>
+                <h2>Continue to your portal</h2>
+                <p>Select the role that matches how you use AttendAI Vision.</p>
+            </div>
+
+            <a href="/login/admin" class="role-card">
+                <span class="role-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg>
+                </span>
+                <span class="role-copy">
+                    <strong>Administrator</strong>
+                    <small>Manage attendance, students, reports, and system preferences.</small>
+                </span>
+                <span class="role-arrow">→</span>
+            </a>
+
+            <a href="/login/student" class="role-card">
+                <span class="role-icon">
+                    <svg viewBox="0 0 24 24"><path d="m3 9 9-5 9 5-9 5-9-5Z"/><path d="M7 12v5c3 2 7 2 10 0v-5"/></svg>
+                </span>
+                <span class="role-copy">
+                    <strong>Student</strong>
+                    <small>View your attendance summary and recent attendance records.</small>
+                </span>
+                <span class="role-arrow">→</span>
+            </a>
+
+            <p class="access-note">Use only the account assigned to you by your institution.</p>
+        </div>
+    </section>
+
+    <footer class="access-footer">
+        <span>© 2026 AttendAI Vision</span>
+        <span>Intelligent Attendance Management System</span>
+    </footer>
+</main>
+</body>
+</html>

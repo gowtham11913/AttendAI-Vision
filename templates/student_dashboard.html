@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0B1F33">
+<title>Student Portal | AttendAI Vision</title>
+<style>
+:root{--navy:#071d30;--navy2:#103b5d;--blue:#145d8f;--soft:#e8f3fa;--bg:#f4f8fb;--text:#102a3d;--muted:#5b7385;--border:#d7e4ec;--green:#16734b}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,Segoe UI,sans-serif;color:var(--text);background:linear-gradient(180deg,#eef6fb,#f8fbfd 260px,var(--bg))}
+.topbar{position:sticky;top:0;z-index:10;min-height:76px;padding:12px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;color:#fff;background:linear-gradient(100deg,var(--navy),var(--navy2));box-shadow:0 8px 24px #071d3029}
+.brand,.actions,.profile{display:flex;align-items:center}.brand{gap:12px}.mark{width:42px;height:42px;display:grid;place-items:center;border:1px solid #ffffff38;border-radius:12px;background:#ffffff18;font-weight:900}.brand div:last-child,.profile div:last-child{display:flex;flex-direction:column}.brand span,.profile small{margin-top:2px;color:#ffffffb3;font-size:.7rem}
+.actions{gap:12px}.profile{gap:10px;padding:7px 11px;border:1px solid #ffffff29;border-radius:12px;background:#ffffff14}.avatar{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;color:var(--navy);background:#d9effb;font-weight:800}.profile strong{font-size:.78rem}
+.logout{min-height:42px;padding:10px 14px;border:1px solid #ffffff38;border-radius:11px;color:#fff;background:#ffffff14;font-size:.75rem;font-weight:800;text-decoration:none}
+main{width:min(1180px,calc(100% - 40px));margin:auto;padding:34px 0 44px}.welcome{padding:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:28px;border:1px solid #cfe0ea;border-radius:20px;background:linear-gradient(135deg,#fffffff9,#e8f5fcf5);box-shadow:0 18px 48px #071d301a}
+.eyebrow{display:inline-block;margin-bottom:8px;color:var(--blue);font-size:.69rem;font-weight:850;letter-spacing:.12em}.welcome h1{margin:0;color:var(--navy);font-size:clamp(1.55rem,3vw,2.25rem);letter-spacing:-.035em}.welcome p{max-width:680px;margin:11px 0 0;color:var(--muted);font-size:.91rem;line-height:1.65}
+.identity{min-width:250px;padding:15px 17px;border:1px solid #c8dce8;border-radius:14px;background:#ffffffd1}.identity span{display:block;color:#7890a0;font-size:.66rem;font-weight:800;letter-spacing:.08em}.identity strong{display:block;margin-top:5px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}.card{padding:20px;border:1px solid var(--border);border-radius:14px;background:#fff;box-shadow:0 10px 28px #071d300f}.card span{color:var(--muted);font-size:.76rem;font-weight:750}.card strong{display:block;margin-top:14px;color:var(--navy);font-size:1.75rem}.card small{display:block;margin-top:8px;color:#7890a0}
+.panel{margin-top:20px;padding:24px;border:1px solid var(--border);border-radius:20px;background:#fff;box-shadow:0 18px 48px #071d301a}.panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:20px}.panel h2{margin:0;color:var(--navy);font-size:1.2rem}.panel p{margin:6px 0 0;color:var(--muted);font-size:.78rem}
+.filters{display:flex;align-items:flex-end;gap:10px}.field{display:flex;flex-direction:column;gap:6px}.field label{color:var(--muted);font-size:.67rem;font-weight:800}.field input,.clear{min-height:40px;padding:8px 11px;border:1px solid #c8d9e4;border-radius:9px;background:#fff}.clear{color:var(--blue);background:#f4f9fc;font-size:.72rem;font-weight:800;cursor:pointer}
+.wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px}table{width:100%;min-width:600px;border-collapse:collapse}th,td{padding:14px 16px;border-bottom:1px solid #e3edf3;text-align:left}th{color:#496579;background:#f3f8fb;font-size:.68rem;letter-spacing:.045em}td{font-size:.79rem;font-weight:600}tbody tr:last-child td{border-bottom:0}.badge{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;color:var(--green);background:#e8f7ef;font-size:.68rem;font-weight:850}.badge:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.empty,.no-results{padding:40px;text-align:center;color:var(--muted)}.no-results{display:none}.footer{margin-top:22px;padding:16px 4px;display:flex;justify-content:space-between;gap:20px;color:#7890a0;font-size:.69rem}.footer strong{color:var(--navy2)}
+@media(max-width:900px){.welcome{align-items:stretch;flex-direction:column}.identity{min-width:0}.grid{grid-template-columns:1fr}.panel-head{align-items:stretch;flex-direction:column}}
+@media(max-width:680px){.topbar{padding:10px 14px}.brand span,.profile div:last-child{display:none}.profile{padding:5px;border:0;background:transparent}main{width:calc(100% - 20px);padding-top:18px}.welcome,.panel{padding:18px}.filters{align-items:stretch;flex-direction:column}.field input,.clear{width:100%}.footer{flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="mark">AV</div><div><strong>AttendAI Vision</strong><span>Student Attendance Portal</span></div></div>
+  <div class="actions">
+    <div class="profile"><div class="avatar">{{ student.name[0] | upper if student.name else 'S' }}</div><div><strong>{{ student.name }}</strong><small>{{ student.roll_no }}</small></div></div>
+    <a class="logout" href="/logout">Logout</a>
+  </div>
+</header>
+
+<main>
+<section class="welcome">
+  <div><span class="eyebrow">STUDENT PORTAL</span><h1>Welcome, {{ student.name }}</h1><p>View your personal attendance history and filter your records by date.</p></div>
+  <div class="identity"><span>STUDENT ROLL NUMBER</span><strong>{{ student.roll_no }}</strong></div>
+</section>
+
+<section class="grid">
+  <article class="card"><span>Attendance Records</span><strong>{{ total_records }}</strong><small>Records available for your account</small></article>
+  <article class="card"><span>Present Entries</span><strong>{{ present_days }}</strong><small>Confirmed present records</small></article>
+  <article class="card"><span>Latest Attendance</span><strong style="font-size:1.15rem">{% if attendance_records %}{{ attendance_records[0].date }}{% else %}No records{% endif %}</strong><small>Most recent stored attendance date</small></article>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <div><span class="eyebrow">PERSONAL RECORDS</span><h2>Attendance History</h2><p>Filter your attendance entries using a specific date.</p></div>
+    {% if attendance_records %}
+    <div class="filters"><div class="field"><label for="date-filter">Filter by date</label><input type="date" id="date-filter"></div><button class="clear" id="clear-filter" type="button">Clear</button></div>
+    {% endif %}
+  </div>
+
+  {% if attendance_records %}
+  <div class="wrap">
+    <table>
+      <thead><tr><th>Date</th><th>Time</th><th>Status</th></tr></thead>
+      <tbody id="attendance-body">
+      {% for record in attendance_records %}
+        <tr data-date="{{ record.date }}"><td>{{ record.date }}</td><td>{{ record.time }}</td><td><span class="badge">{{ record.status }}</span></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div class="no-results" id="no-results">No attendance records were found for the selected date.</div>
+  </div>
+  {% else %}
+  <div class="empty"><strong>No attendance records available</strong><p>Attendance entries linked to your student account will appear here after they are recorded.</p></div>
+  {% endif %}
+</section>
+
+<footer class="footer"><div><strong>AttendAI Vision</strong> · Student Attendance Portal</div><div>© 2026 AttendAI Vision · Developed by <strong>Gowtham</strong></div></footer>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const filter=document.getElementById("date-filter"),clear=document.getElementById("clear-filter"),body=document.getElementById("attendance-body"),none=document.getElementById("no-results");
+ if(!filter||!body)return;
+ const rows=[...body.querySelectorAll("tr[data-date]")];
+ const norm=v=>{v=String(v||"").trim();if(/^\d{4}-\d{2}-\d{2}$/.test(v))return v;const p=v.split(/[\/-]/);return p.length===3&&p[2].length===4?`${p[2]}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}`:v};
+ const apply=()=>{let n=0;rows.forEach(r=>{const show=!filter.value||norm(r.dataset.date)===filter.value;r.style.display=show?"":"none";if(show)n++});if(none)none.style.display=n?"none":"block"};
+ filter.addEventListener("change",apply);if(clear)clear.addEventListener("click",()=>{filter.value="";apply()});
+});
+</script>
+</body>
+</html>

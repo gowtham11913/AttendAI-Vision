@@ -6504,3 +6504,568 @@ textarea::placeholder {
     }
 }
 
+/* =========================================================
+   ADMINISTRATOR ACCOUNT MENU
+   ========================================================= */
+
+.admin-menu {
+    position: relative;
+    flex-shrink: 0;
+}
+
+
+/* Existing profile design preserved */
+
+.admin-menu-trigger {
+    appearance: none;
+    -webkit-appearance: none;
+
+    border: 0;
+    font-family: inherit;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    text-align: left;
+}
+
+.admin-menu-trigger:hover {
+    filter: brightness(0.98);
+}
+
+
+/* Text */
+
+.admin-trigger-copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.admin-trigger-copy strong {
+    white-space: nowrap;
+}
+
+.admin-trigger-copy small {
+    white-space: nowrap;
+}
+
+
+/* Chevron */
+
+.admin-chevron {
+    width: 16px;
+    height: 16px;
+
+    flex-shrink: 0;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    transition: transform 0.2s ease;
+}
+
+.admin-menu-trigger[aria-expanded="true"]
+.admin-chevron {
+    transform: rotate(180deg);
+}
+
+
+/* Dropdown */
+
+.admin-menu-dropdown {
+    position: absolute;
+
+    top: calc(100% + 12px);
+    right: 0;
+
+    z-index: 1200;
+
+    width: 250px;
+
+    padding: 9px;
+
+    border: 1px solid #c7dbe9;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 20px 55px rgba(7, 29, 48, 0.18);
+}
+
+.admin-menu-dropdown[hidden] {
+    display: none !important;
+}
+
+
+/* Dropdown header */
+
+.admin-menu-header {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    padding: 10px 10px 14px;
+
+    border-bottom: 1px solid #dce8f0;
+}
+
+.admin-menu-header .profile-avatar {
+    flex-shrink: 0;
+}
+
+.admin-menu-header > div:last-child {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.admin-menu-header strong {
+    color: #0b2239;
+    font-size: 0.79rem;
+}
+
+.admin-menu-header small {
+    margin-top: 2px;
+
+    color: #668094;
+    font-size: 0.67rem;
+}
+
+
+/* Links */
+
+.admin-menu-links {
+    padding-top: 6px;
+}
+
+.admin-menu-links a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    min-height: 42px;
+
+    padding: 9px 11px;
+
+    border-radius: 9px;
+
+    color: #173d59;
+
+    font-size: 0.76rem;
+    font-weight: 750;
+
+    text-decoration: none;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.admin-menu-links a:hover {
+    background: #edf6fc;
+    color: #0d4f7d;
+}
+
+
+/* Menu icons */
+
+.admin-menu-links svg {
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+
+/* Logout */
+
+.admin-menu-links .admin-logout-link {
+    margin-top: 3px;
+
+    color: #a3313d;
+}
+
+.admin-menu-links .admin-logout-link:hover {
+    background: #fff1f2;
+    color: #8f1f2c;
+}
+
+
+/* Mobile safety */
+
+@media (max-width: 760px) {
+
+    .admin-menu-dropdown {
+        right: 0;
+
+        width: min(
+            250px,
+            calc(100vw - 28px)
+        );
+    }
+
+    .admin-trigger-copy {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   ADMIN PROFILE + STUDENT PASSWORD RESULT
+   ========================================================= */
+
+.admin-profile-panel,
+.admin-password-panel,
+.student-password-result-panel {
+    max-width: 980px;
+}
+
+.admin-profile-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 4px 0 24px;
+}
+
+.admin-profile-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: #0b1f33;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 1.25rem;
+}
+
+.admin-profile-summary strong,
+.admin-profile-summary span {
+    display: block;
+}
+
+.admin-profile-summary span {
+    margin-top: 4px;
+    color: #64748b;
+}
+
+.admin-profile-details,
+.student-reset-credential-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.admin-profile-details > div,
+.student-reset-credential-grid > div {
+    padding: 16px;
+    border: 1px solid #d8e3ec;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.admin-profile-details span,
+.student-reset-credential-grid span {
+    display: block;
+    margin-bottom: 6px;
+    color: #64748b;
+    font-size: 0.84rem;
+}
+
+.admin-password-form {
+    width: min(100%, 620px);
+    display: grid;
+    gap: 16px;
+}
+
+.admin-password-field label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 700;
+}
+
+.admin-password-field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid #cbd8e4;
+    border-radius: 10px;
+    background: #ffffff;
+    font: inherit;
+}
+
+.admin-password-note {
+    margin: 0;
+    color: #64748b;
+    line-height: 1.55;
+}
+
+.admin-security-message {
+    width: min(100%, 620px);
+    margin-bottom: 18px;
+    padding: 13px 15px;
+    border-radius: 10px;
+}
+
+.admin-security-error {
+    color: #a12632;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+}
+
+.admin-security-success {
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.student-reset-notice {
+    margin: 20px 0;
+    padding: 15px 16px;
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    background: #f0f9ff;
+    color: #36556f;
+    line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+    .admin-profile-details,
+    .student-reset-credential-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   STUDENT PASSWORD MANAGEMENT
+   ========================================================= */
+
+.student-password-management-copy {
+    max-width: 700px;
+    margin-bottom: 22px;
+    color: #5f7286;
+    line-height: 1.6;
+}
+
+.student-password-management-form {
+    width: min(100%, 680px);
+    display: grid;
+    gap: 18px;
+}
+
+.student-password-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.student-password-field input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 14px;
+    border: 1px solid #c9d8e6;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #10243a;
+    font: inherit;
+    outline: none;
+}
+
+.student-password-field input:focus {
+    border-color: #2478b8;
+    box-shadow: 0 0 0 4px rgba(36, 120, 184, 0.12);
+}
+
+.student-password-message {
+    max-width: 680px;
+    margin-bottom: 20px;
+    padding: 13px 15px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.student-password-error {
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+    color: #b42332;
+}
+
+.student-password-process {
+    max-width: 680px;
+    margin-top: 28px;
+    padding: 18px 20px;
+    border: 1px solid #d8e5ef;
+    border-radius: 12px;
+    background: #f7fafc;
+}
+
+.student-password-process ol {
+    margin: 12px 0 0;
+    padding-left: 22px;
+    color: #5f7286;
+    line-height: 1.7;
+}
+
+.temporary-credentials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.temporary-credentials-grid > div {
+    padding: 18px;
+    border: 1px solid #d8e5ef;
+    border-radius: 12px;
+    background: #f7fafc;
+}
+
+.temporary-credentials-grid span,
+.temporary-credentials-grid strong {
+    display: block;
+}
+
+.temporary-credentials-grid span {
+    margin-bottom: 7px;
+    color: #64748b;
+    font-size: 0.84rem;
+}
+
+.student-password-warning {
+    margin: 20px 0;
+    padding: 15px 16px;
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    background: #f0f9ff;
+    color: #36556f;
+    line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+    .temporary-credentials-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   STUDENT PASSWORD MANAGEMENT
+   ========================================================= */
+
+.student-password-management-copy {
+    max-width: 700px;
+    margin-bottom: 22px;
+    color: #5f7286;
+    line-height: 1.6;
+}
+
+.student-password-management-form {
+    width: min(100%, 680px);
+    display: grid;
+    gap: 18px;
+}
+
+.student-password-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.student-password-field input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 14px;
+    border: 1px solid #c9d8e6;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #10243a;
+    font: inherit;
+    outline: none;
+}
+
+.student-password-field input:focus {
+    border-color: #2478b8;
+    box-shadow: 0 0 0 4px rgba(36, 120, 184, 0.12);
+}
+
+.student-password-message {
+    max-width: 680px;
+    margin-bottom: 20px;
+    padding: 13px 15px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.student-password-error {
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+    color: #b42332;
+}
+
+.student-password-process {
+    max-width: 680px;
+    margin-top: 28px;
+    padding: 18px 20px;
+    border: 1px solid #d8e5ef;
+    border-radius: 12px;
+    background: #f7fafc;
+}
+
+.student-password-process ol {
+    margin: 12px 0 0;
+    padding-left: 22px;
+    color: #5f7286;
+    line-height: 1.7;
+}
+
+.temporary-credentials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.temporary-credentials-grid > div {
+    padding: 18px;
+    border: 1px solid #d8e5ef;
+    border-radius: 12px;
+    background: #f7fafc;
+}
+
+.temporary-credentials-grid span,
+.temporary-credentials-grid strong {
+    display: block;
+}
+
+.temporary-credentials-grid span {
+    margin-bottom: 7px;
+    color: #64748b;
+    font-size: 0.84rem;
+}
+
+.student-password-warning {
+    margin: 20px 0;
+    padding: 15px 16px;
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    background: #f0f9ff;
+    color: #36556f;
+    line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+    .temporary-credentials-grid {
+        grid-template-columns: 1fr;
+    }
+}

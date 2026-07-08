@@ -1,0 +1,10 @@
+.admin-menu{position:relative}
+.admin-menu-trigger{display:flex;align-items:center;gap:11px;padding:4px 7px;border:0;border-radius:10px;background:transparent;color:#0b2239;cursor:pointer}
+.admin-menu-trigger:hover{background:rgba(255,255,255,.42)}
+.admin-avatar{width:42px;height:42px;display:grid;place-items:center;border:2px solid #dff2ff;border-radius:6px;background:#08243b;color:#fff;font-weight:900}
+.admin-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px}.admin-copy strong{font-size:.78rem}.admin-copy small{color:#55738a;font-size:.64rem}
+.admin-menu-trigger svg{width:16px;fill:none;stroke:currentColor;stroke-width:2}
+.admin-menu-dropdown{position:absolute;z-index:1000;right:0;top:calc(100% + 12px);width:245px;padding:9px;border:1px solid #c9dce9;border-radius:13px;background:#fff;box-shadow:0 18px 50px rgba(7,29,48,.16)}
+.admin-menu-dropdown[hidden]{display:none!important}.admin-menu-head{display:flex;align-items:center;gap:11px;padding:10px 9px 13px;border-bottom:1px solid #e0eaf1}.admin-menu-head .admin-avatar{width:38px;height:38px}
+.admin-menu-head>div{display:flex;flex-direction:column}.admin-menu-head strong{font-size:.78rem}.admin-menu-head small{color:#6b8294;font-size:.65rem}
+.admin-menu-dropdown>a{display:block;margin-top:5px;padding:10px 11px;border-radius:8px;color:#173d59;font-size:.74rem;font-weight:750}.admin-menu-dropdown>a:hover{background:#eef6fc}.admin-menu-dropdown .admin-logout-link{color:#a32c37}.admin-menu-dropdown .admin-logout-link:hover{background:#fff1f2}

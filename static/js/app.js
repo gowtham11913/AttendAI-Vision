@@ -1285,6 +1285,132 @@ function initCapturePage() {
     }
 
 
+    function showStudentPortalCredentials(studentPortal) {
+        if (
+            !studentPortal ||
+            !studentPortal.username ||
+            !studentPortal.temporary_password
+        ) {
+            return;
+        }
+
+        let panel =
+            document.getElementById("student-portal-credentials-panel");
+
+        if (!panel) {
+            panel = document.createElement("section");
+            panel.id = "student-portal-credentials-panel";
+            panel.className = "student-portal-credentials-panel";
+            panel.setAttribute("role", "status");
+            panel.setAttribute("aria-live", "polite");
+
+            const processingPanel =
+                document.getElementById("registration-processing-panel");
+
+            if (processingPanel) {
+                processingPanel.insertAdjacentElement(
+                    "afterend",
+                    panel
+                );
+            } else {
+                const pageContent =
+                    document.querySelector(".page-content");
+
+                (pageContent || document.body).appendChild(panel);
+            }
+        }
+
+        panel.replaceChildren();
+
+        const heading = document.createElement("h3");
+        heading.textContent = "Student Portal Access";
+
+        const note = document.createElement("p");
+        note.textContent =
+            "A new student login account has been created. Share these temporary credentials securely. The password is shown here only for this registration session.";
+
+        const credentials = document.createElement("div");
+        credentials.className = "student-portal-credentials-grid";
+
+        const usernameRow = document.createElement("div");
+        const usernameLabel = document.createElement("span");
+        const usernameValue = document.createElement("strong");
+
+        usernameLabel.textContent = "Username";
+        usernameValue.textContent = studentPortal.username;
+
+        usernameRow.append(
+            usernameLabel,
+            usernameValue
+        );
+
+        const passwordRow = document.createElement("div");
+        const passwordLabel = document.createElement("span");
+        const passwordValue = document.createElement("strong");
+
+        passwordLabel.textContent = "Temporary Password";
+        passwordValue.textContent =
+            studentPortal.temporary_password;
+
+        passwordRow.append(
+            passwordLabel,
+            passwordValue
+        );
+
+        credentials.append(
+            usernameRow,
+            passwordRow
+        );
+
+        const actions = document.createElement("div");
+        actions.className = "student-portal-credentials-actions";
+
+        const copyButton = document.createElement("button");
+        copyButton.type = "button";
+        copyButton.className = "primary-button";
+        copyButton.textContent = "Copy Credentials";
+
+        copyButton.addEventListener("click", async () => {
+            const credentialText =
+                `AttendAI Vision Student Portal\n` +
+                `Username: ${studentPortal.username}\n` +
+                `Temporary Password: ${studentPortal.temporary_password}`;
+
+            try {
+                await navigator.clipboard.writeText(
+                    credentialText
+                );
+
+                showToast(
+                    "Student portal credentials copied.",
+                    "success"
+                );
+            } catch {
+                showToast(
+                    "Unable to copy automatically. Copy the credentials manually.",
+                    "warning",
+                    6000
+                );
+            }
+        });
+
+        actions.appendChild(copyButton);
+
+        panel.append(
+            heading,
+            note,
+            credentials,
+            actions
+        );
+
+        panel.hidden = false;
+        panel.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+    }
+
+
     async function pollRegistrationPipeline(jobId) {
         while (true) {
             const response = await fetch(
@@ -1325,13 +1451,21 @@ function initCapturePage() {
                     "registered"
                 );
 
+                if (data.student_portal) {
+                    showStudentPortalCredentials(
+                        data.student_portal
+                    );
+                }
+
                 showToast(
-                    "Student is ready for live attendance.",
+                    data.student_portal
+                        ? "Registration completed and student portal account created."
+                        : "Student is ready for live attendance.",
                     "success",
                     7000
                 );
 
-                return;
+                return data;
             }
 
             if (data.status === "failed") {
@@ -2205,6 +2339,11 @@ function initLiveAttendance() {
             setInstruction(
                 "Move closer to the camera."
             );
+
+            return;
+        }
+
+
         if (status === "face_too_large") {
             clearRecognitionResult({
                 name: "Move Back",
@@ -2228,9 +2367,6 @@ function initLiveAttendance() {
             return;
         }
 
-            return;
-        }
-        
 
         if (status === "student_not_found") {
             setCameraState(
